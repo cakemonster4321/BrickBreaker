@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 import random
-from action import collision_x,collision_y,tile_generation
+from action import collision,tile_generation
 
 
 
@@ -87,7 +87,7 @@ class bar(GameObject):
             self.rect.x += self.speed
         if self.rect.x <= 0:
             self.rect.x = 0
-        elif self.rect.x >= screen_width-self.offset_x:
+        elif self.rect.x >= screen_width - self.offset_x:
             self.rect.x = screen_width - self.offset_x
     def draw(self,screen):
             screen.blit(self.image,(self.rect.x,self.rect.y))
@@ -114,7 +114,7 @@ def main():
     background1 = background(BACKGROUND)
     ball1 = ball(BALL)
     bar1 = bar(BAR)
-    tile_amount = 120
+    tile_amount = 240
     
     
     while run:
@@ -127,18 +127,16 @@ def main():
         tiles = tile_generation(tiles,tile,TILE,tile_x_pos,tile_y_pos,tile_amount)
         
         for tile_piece in tiles:
-            tile_piece.draw(screen)
             if ball1.rect.colliderect(tile_piece):
-                ball1.speed_x = collision_x(ball1,tile_piece)
-                ball1.speed_y = collision_y(ball1,tile_piece) 
+                ball1.speed_x,ball1.speed_y = collision(ball1,tile_piece)
+            tile_piece.draw(screen)
 
         
         ball1.draw(screen)
         bar1.draw(screen)
         
         if ball1.rect.colliderect(bar1.rect):
-            ball1.speed_x = collision_x(ball1,bar1)
-            ball1.speed_y = collision_y(ball1,bar1) 
+            ball1.speed_x,ball1.speed_y = collision(ball1,bar1)
             
         
         ball1.update()
