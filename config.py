@@ -1,0 +1,9 @@
+screen_height = 700
+screen_width = 1200
+run  = True
+gamespeed = 15
+tiles = []
+tile_x_pos = 0
+tile_y_pos = 0
+tile_amount = 240
+has_collided = False
