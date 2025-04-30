@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+import random
 from action import collision_x,collision_y,tile_generation
 
 
@@ -19,15 +20,11 @@ TILE = [
     pygame.image.load(os.path.join("assets/tile2.png"))
 ]
 class GameObject:
-    x = 300
-    y = 300
     
     def __init__(self,image):
         self.image = image
         assert isinstance(self.image, pygame.Surface)
         self.rect = self.image.get_rect()
-        self.rect.x = self.x
-        self.rect.y = self.y
         
     
     def draw(self,screen):
@@ -65,8 +62,14 @@ class ball(GameObject):
         
 
 class tile(GameObject):
-    def __init__(self,image):
+    def __init__(self,image,x_pos,y_pos):
         super().__init__(image)
+        self.rect.x = x_pos
+        self.rect.y = y_pos
+    
+    
+    def draw(self,screen):
+        screen.blit(self.image,(self.rect.x,self.rect.y))
         
 
 class bar(GameObject):
@@ -100,16 +103,18 @@ class background:
         screen.blit(self.image,(self.x,self.y))
     
 def main():
-    global points, death_count,gamespeed,tiles
+    global points, death_count,gamespeed,tiles,tile_x_pos,tile_y_pos
     run = True
     clock = pygame.time.Clock()
     tiles = []
     gamespeed = 15
     font = pygame.font.Font(os.path.join("assets/font", "ARCADECLASSIC.TTF"), 30)
-    
+    tile_x_pos = 0
+    tile_y_pos = 0
     background1 = background(BACKGROUND)
     ball1 = ball(BALL)
     bar1 = bar(BAR)
+    tile_amount = 120
     
     
     while run:
@@ -117,16 +122,25 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
                 
-        userinput = pygame.key.get_pressed()
-        
         background1.draw(screen)
+        userinput = pygame.key.get_pressed()
+        tiles = tile_generation(tiles,tile,TILE,tile_x_pos,tile_y_pos,tile_amount)
+        
+        for tile_piece in tiles:
+            tile_piece.draw(screen)
+            if ball1.rect.colliderect(tile_piece):
+                ball1.speed_x = collision_x(ball1,tile_piece)
+                ball1.speed_y = collision_y(ball1,tile_piece) 
+
+        
         ball1.draw(screen)
         bar1.draw(screen)
+        
         if ball1.rect.colliderect(bar1.rect):
             ball1.speed_x = collision_x(ball1,bar1)
-            ball1.speed_y = collision_y(ball1,bar1)
-            print("hit",ball1.speed_x,ball1.speed_y)
+            ball1.speed_y = collision_y(ball1,bar1) 
             
+        
         ball1.update()
         bar1.update(userinput)
         
@@ -135,7 +149,9 @@ def main():
         
     pygame.quit()
     sys.exit()
-    # def score()
+
+
+# def score()
 def menu(): 
     pass
 
