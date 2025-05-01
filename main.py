@@ -10,12 +10,12 @@ pygame.init()
 screen = pygame.display.set_mode((config.screen_width,config.screen_height))
 pygame.display.set_caption("Brick Breaker")
 
-BACKGROUND = pygame.image.load(os.path.join("assets/background.png"))
-BAR = pygame.image.load(os.path.join("assets/bar.png"))
-BALL = pygame.image.load(os.path.join("assets/ball.png"))
+BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png"))
+BAR = pygame.image.load(os.path.join("assets/Bar/bar.png"))
+BALL = pygame.image.load(os.path.join("assets/Ball/ball.png"))
 TILE = [
-    pygame.image.load(os.path.join("assets/tile1.png")),
-    pygame.image.load(os.path.join("assets/tile2.png"))
+    pygame.image.load(os.path.join("assets/Tiles/tile1.png")),
+    pygame.image.load(os.path.join("assets/Tiles/tile2.png"))
 ]
 class GameObject:
     
