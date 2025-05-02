@@ -94,3 +94,10 @@ def tile_generation(tiles,tile,image,x_pos,y_pos,amount):
                 y_pos += 30
                 x_pos = 0
     return tiles
+
+def score():
+    config.points += 1
+    config.score_text = config.font.render(f"Your score  {config.points}",True,(255,255,255))
+    
+    return config.score_text
+    

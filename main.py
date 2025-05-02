@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 import config
-from action import collision,tile_generation
+import action
 
 
 
@@ -39,7 +39,7 @@ class ball(GameObject):
         self.offset_x = 18
         self.offset_y = 18
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
-        self.rect.y = 600 - (self.offset_y/2)
+        self.rect.y = 500 - (self.offset_y/2)
         self.float_x = self.rect.x
         self.float_y = self.rect.y
         self.player_pos = pygame.math.Vector2(self.rect.x,self.rect.y)
@@ -89,7 +89,7 @@ class bar(GameObject):
         self.offset_y = 16
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
         self.rect.y = 600 - (self.offset_y/2)
-        self.speed = 10
+        self.speed = 15
     def update(self,userinput):
         if userinput[pygame.K_LEFT] and not userinput[pygame.K_RIGHT]:
             self.rect.x -= self.speed
@@ -124,10 +124,8 @@ def circle_rect_collide(circle_center, circle_radius, rect):
      
     return False 
 def main():
-    global points, death_count,gamespeed,tiles,tile_x_pos,tile_y_pos
     run = True
     clock = pygame.time.Clock()
-    font = pygame.font.Font(os.path.join("assets/font", "ARCADECLASSIC.TTF"), 30)
     
     ball1 = ball(BALL)
     background1 = background(BACKGROUND)
@@ -143,33 +141,43 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         
-        tiles = tile_generation(config.tiles,tile,TILE,config.tile_x_pos,config.tile_y_pos,config.tile_amount)
+        config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_x_pos,config.tile_y_pos,config.tile_amount)
         
         ball1.draw(screen)
         bar1.draw(screen)
+        bar1.update(userinput)
         
         if circle_rect_collide(ball1.rect.center,ball1.offset_x/2,bar1.rect):
-            ball1.speed_x,ball1.speed_y = collision(ball1,bar1)
+            ball1.speed_x,ball1.speed_y = action.collision(ball1,bar1)
             
         for i in range(ball1.step):
             ball1.update()
         for tile_piece in reversed((config.tiles)):
             if not circle_rect_collide(ball1.previous_rect.center,ball1.offset_x/2,tile_piece.rect) and circle_rect_collide(ball1.rect.center,ball1.offset_x/2,tile_piece.rect):
                 config.tiles.remove(tile_piece)
-                ball1.speed_x,ball1.speed_y = collision(ball1,tile_piece)
+                config.score_text = action.score()
+                ball1.speed_x,ball1.speed_y = action.collision(ball1,tile_piece)
             tile_piece.draw(screen)
-        bar1.update(userinput)
+        
+        screen.blit(config.score_text,(990,650))
         
         pygame.display.update()
         clock.tick(60)
-        
     pygame.quit()
     sys.exit()
 
 
-# def score()
 def menu(): 
-    pass
-
+    config.run = True
+    while config.run:
+        if config.health > 0:
+            main()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            config.run = False
+    
+    
+    pygame.quit()
+    sys.exit()
 if __name__ == "__main__":
-    main()
+    menu()
