@@ -1,1 +1,0 @@
-for i in range(ball1.step):
