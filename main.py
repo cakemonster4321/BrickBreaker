@@ -34,14 +34,17 @@ class GameObject:
 class ball(GameObject):
     def __init__(self,image):   
         super().__init__(image)
-        self.speed_x = 5
-        self.speed_y = -15
+        self.speed_x = 10
+        self.speed_y = -10
         self.offset_x = 20
         self.offset_y = 20
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
         self.rect.y = 600 - (self.offset_y/2)
+        self.float_x = self.rect.x
+        self.float_y = self.rect.y
         self.player_pos = pygame.math.Vector2(self.rect.x,self.rect.y)
         self.previous_rect = self.rect.copy()
+        self.step = 1
     def update(self):
         self.player_pos = pygame.math.Vector2(self.rect.x,self.rect.y)
         if self.rect.x <= 0:
@@ -55,8 +58,13 @@ class ball(GameObject):
         
         self.previous_rect = self.rect.copy()
         
-        self.rect.x += self.speed_x
-        self.rect.y += self.speed_y
+        self.step = int((max(abs(self.speed_x),abs(self.speed_y)))/10)
+        if self.step == 0:
+            self.step = 1
+        self.float_x += self.speed_x / self.step
+        self.float_y += self.speed_y / self.step
+        self.rect.x = self.float_x
+        self.rect.y = self.float_y
             
         
         
@@ -130,18 +138,8 @@ def main():
                 
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
-        tiles = tile_generation(config.tiles,tile,TILE,config.tile_x_pos,config.tile_y_pos,config.tile_amount)
         
-        has_collided = False
-        for tile_piece in config.tiles:
-            if check_rect_collide(ball1.rect,tile_piece.rect):
-                if not has_collided:
-                    ball1.speed_x,ball1.speed_y = collision(ball1,tile_piece)
-                    has_collided = True
-                    # print("now:",ball1.rect.x,ball1.rect.y)
-                    # print("previous:",ball1.previous_rect.x,ball1.previous_rect.y)
-            tile_piece.draw(screen)
-
+        tiles = tile_generation(config.tiles,tile,TILE,config.tile_x_pos,config.tile_y_pos,config.tile_amount)
         
         ball1.draw(screen)
         bar1.draw(screen)
@@ -149,8 +147,13 @@ def main():
         if check_rect_collide(ball1.rect,bar1.rect):
             ball1.speed_x,ball1.speed_y = collision(ball1,bar1)
             
-        
-        ball1.update()
+        for i in range(ball1.step):
+            ball1.update()
+        for tile_piece in reversed((config.tiles)):
+            if not check_rect_collide(ball1.previous_rect,tile_piece.rect) and check_rect_collide(ball1.rect,tile_piece.rect):
+                config.tiles.remove(tile_piece)
+                ball1.speed_x,ball1.speed_y = collision(ball1,tile_piece)
+            tile_piece.draw(screen)
         bar1.update(userinput)
         
         pygame.display.update()

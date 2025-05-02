@@ -6,4 +6,3 @@ tiles = []
 tile_x_pos = 0
 tile_y_pos = 0
 tile_amount = 240
-has_collided = False
