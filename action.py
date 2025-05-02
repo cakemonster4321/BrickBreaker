@@ -1,23 +1,21 @@
 import config
 import random
-import math
+
+
+def circle_rect_collide(circle_center, circle_radius, rect):
+    closest_x = max(rect.left, min(circle_center[0], rect.right))
+    closest_y = max(rect.top, min(circle_center[1], rect.bottom))
+
+    dx = circle_center[0] - closest_x
+    dy = circle_center[1] - closest_y
+
+    if dx**2 + dy**2 <= circle_radius**2:
+        return True
+     
+    return False 
 def collision(ball,object):
     direction = ""
-    
-    # top_mid_coor = ((object.rect.right + object.rect.left)/2,(object.rect.top))
-    # bottom_mid_coor = ((object.rect.right + object.rect.left)/2,(object.rect.bottom))
-    # left_mid_coor = (object.rect.left,(object.rect.top + object.rect.bottom)/2)
-    # right_mid_coor = (object.rect.right,(object.rect.top + object.rect.bottom)/2)
-    
-    # right_side_dis = math.sqrt((right_mid_coor[0] - ball.rect.center[0])**2 + (right_mid_coor[1] - ball.rect.center[1])**2)
-    # left_side_dis = math.sqrt((left_mid_coor[0] - ball.rect.center[0])**2 + (left_mid_coor[1] - ball.rect.center[1])**2)
-    # top_side_dis = math.sqrt((top_mid_coor[0] - ball.rect.center[0])**2 + (top_mid_coor[1] - ball.rect.center[1])**2)
-    # bot_side_dis = math.sqrt((bottom_mid_coor[0] - ball.rect.center[0])**2 + (bottom_mid_coor[1] - ball.rect.center[1])**2)
-
-    # if (top_side_dis,bot_side_dis) > (right_side_dis,left_side_dis):
-    #     direction = "top" if top_side_dis > bot_side_dis else "bottom"
-    # else:
-    #     direction = "right" if right_side_dis > left_side_dis else "left"    
+   
     dx = (ball.rect.centerx - object.rect.centerx)
     dy = (ball.rect.centery - object.rect.centery)
     widths = (ball.rect.width + object.rect.width) / 2
@@ -78,10 +76,17 @@ def collision(ball,object):
             
     return ball.speed_x,ball.speed_y
 
-def tile_action():
-    pass
+def tile_action(ball,tiles,screen):
+    for tile in reversed((tiles)):
+        if not circle_rect_collide(ball.previous_rect.center,ball.offset_x/2,tile.rect) and circle_rect_collide(ball.rect.center,ball.offset_x/2,tile.rect):
+            config.tiles.remove(tile)
+            config.score_text = score()
+            ball.speed_x,ball.speed_y = collision(ball,tile)
+        tile.draw(screen)
 
-def tile_generation(tiles,tile,image,x_pos,y_pos,amount):
+def tile_generation(tiles,tile,image,amount):
+    x_pos = 0
+    y_pos = 0
     assert isinstance(tiles,list)
     assert isinstance(image,list)
     if len(tiles) == 0:

@@ -112,17 +112,7 @@ class background:
     def draw(self,screen):
         screen.blit(self.image,(self.x,self.y))
  
-def circle_rect_collide(circle_center, circle_radius, rect):
-    closest_x = max(rect.left, min(circle_center[0], rect.right))
-    closest_y = max(rect.top, min(circle_center[1], rect.bottom))
 
-    dx = circle_center[0] - closest_x
-    dy = circle_center[1] - closest_y
-
-    if dx**2 + dy**2 <= circle_radius**2:
-        return True
-     
-    return False 
 def main():
     run = True
     clock = pygame.time.Clock()
@@ -141,26 +131,21 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         
-        config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_x_pos,config.tile_y_pos,config.tile_amount)
         
         ball1.draw(screen)
         bar1.draw(screen)
         bar1.update(userinput)
         
-        if circle_rect_collide(ball1.rect.center,ball1.offset_x/2,bar1.rect):
+        config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
+        
+        if action.circle_rect_collide(ball1.rect.center,ball1.offset_x/2,bar1.rect):
             ball1.speed_x,ball1.speed_y = action.collision(ball1,bar1)
             
-        for i in range(ball1.step):
-            ball1.update()
-        for tile_piece in reversed((config.tiles)):
-            if not circle_rect_collide(ball1.previous_rect.center,ball1.offset_x/2,tile_piece.rect) and circle_rect_collide(ball1.rect.center,ball1.offset_x/2,tile_piece.rect):
-                config.tiles.remove(tile_piece)
-                config.score_text = action.score()
-                ball1.speed_x,ball1.speed_y = action.collision(ball1,tile_piece)
-            tile_piece.draw(screen)
         
+        ball1.update()
+        action.tile_action(ball1,config.tiles,screen)
         screen.blit(config.score_text,(990,650))
-        
+    
         pygame.display.update()
         clock.tick(60)
     pygame.quit()
