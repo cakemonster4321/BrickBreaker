@@ -114,23 +114,20 @@ class background:
  
 
 def main():
-    run = True
     clock = pygame.time.Clock()
-    
     ball1 = ball(BALL)
     background1 = background(BACKGROUND)
     bar1 = bar(BAR)
-    
     
     
     while config.run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 config.run = False
+        
                 
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
-        
         
         ball1.draw(screen)
         bar1.draw(screen)
@@ -141,13 +138,18 @@ def main():
         if action.circle_rect_collide(ball1.rect.center,ball1.offset_x/2,bar1.rect):
             ball1.speed_x,ball1.speed_y = action.collision(ball1,bar1)
             
-        
         ball1.update()
         action.tile_action(ball1,config.tiles,screen)
         screen.blit(config.score_text,(990,650))
     
+        
         pygame.display.update()
-        clock.tick(60)
+        
+        if not config.has_initialized:
+            pygame.time.wait(2000)
+            config.has_initialized = True
+        
+        clock.tick(60)   
     pygame.quit()
     sys.exit()
 
@@ -155,11 +157,15 @@ def main():
 def menu(): 
     config.run = True
     while config.run:
-        if config.health > 0:
-            main()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            config.run = False
+        screen.fill((195,131,179))
+        screen.blit(config.menu_text,config.menu_text_rect)
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                config.run = False
+            if event.type == pygame.KEYDOWN:
+                pygame.time.wait(500)
+                main()
     
     
     pygame.quit()
