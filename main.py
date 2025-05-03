@@ -42,11 +42,9 @@ class ball(GameObject):
         self.rect.y = 500 - (self.offset_y/2)
         self.float_x = self.rect.x
         self.float_y = self.rect.y
-        self.player_pos = pygame.math.Vector2(self.rect.x,self.rect.y)
         self.previous_rect = self.rect.copy()
         self.step = 1
     def update(self):
-        self.player_pos = pygame.math.Vector2(self.rect.x,self.rect.y)
         if self.rect.x <= 0:
             self.speed_x = abs(self.speed_x)
         if self.rect.x >= config.screen_width - self.offset_x:
@@ -58,13 +56,14 @@ class ball(GameObject):
         
         self.previous_rect = self.rect.copy()
         
-        self.step = int((max(abs(self.speed_x),abs(self.speed_y)))/10)
-        if self.step == 0:
-            self.step = 1
-        self.float_x += self.speed_x / self.step
-        self.float_y += self.speed_y / self.step
-        self.rect.x = self.float_x
-        self.rect.y = self.float_y
+        # self.step = int((max(abs(self.speed_x),abs(self.speed_y)))/10)
+        
+        # self.float_x += self.speed_x / self.step
+        # self.float_y += self.speed_y / self.step
+        # self.rect.x = self.float_x
+        # self.rect.y = self.float_y
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
             
         
         
@@ -141,7 +140,10 @@ def main():
         ball1.update()
         action.tile_action(ball1,config.tiles,screen)
         screen.blit(config.score_text,(990,650))
-    
+        
+        fps = clock.get_fps()
+        fps_text = config.font.render(f"FPS: {fps:.2f}", True, (255, 255, 255))
+        screen.blit(fps_text, (10, 650))
         
         pygame.display.update()
         
