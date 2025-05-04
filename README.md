@@ -1,6 +1,6 @@
-#BrickBreaker
+# BrickBreaker
 
-#Intro
+# Intro
 
 Hello! This is a small BrickBreaker game I built using python.   
 Since the best way to learn a language is by making a project.  
@@ -11,7 +11,7 @@ I hope you find my game interesting and maybe you can leave a star(?). If there'
 
 Best regards.
 
-##Dependencies
+## Dependencies
 
 - pygame
 
@@ -20,6 +20,8 @@ Use the following commands in your terminal to download it:
 
 pip install pygame
 
-##features
+## features
+
+Under construction...
 
 
