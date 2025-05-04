@@ -156,7 +156,7 @@ class health:
             
         if self.current_hp == 0:
             config.main_run = False
-
+            config.tiles.clear()
 def main():
     clock = pygame.time.Clock()
     ball1 = ball(BALL)
@@ -232,6 +232,7 @@ def menu():
                 if event.type == pygame.KEYDOWN:
                     pygame.time.wait(200)
                     config.main_run = True
+                    print("yes")
                     break
         
         
