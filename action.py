@@ -76,7 +76,7 @@ def collision(ball,object):
             
     return ball.speed_x,ball.speed_y
 
-def tile_action(ball,tiles,screen):
+def tile_action(ball,tiles):
     to_remove = []
     ball_range = ball.rect.inflate(50,50)
     for tile in reversed((tiles)):
@@ -88,9 +88,6 @@ def tile_action(ball,tiles,screen):
             to_remove.append(tile)
     for tile in to_remove:
         tiles.remove(tile)
-    
-    for tile in tiles:
-        tile.draw(screen)
 
 def tile_generation(tiles,tile,image,amount):
     x_pos = 0
@@ -113,4 +110,20 @@ def score():
     config.score_text = config.font.render(f"Your score  {config.points}",False,(255,255,255))
     
     return config.score_text
+
+def add_balls(balls_arr,balls_count,cls,image,x_pos,y_pos):
+    assert isinstance(balls_arr,list)
+    for _ in range(0,balls_count):
+        balls_arr.append(cls(image,x_pos,y_pos))
+    return balls_arr
+
+def delete_balls(ball):
+    config.balls.remove(ball)
+    
+def draw_tiles(screen):
+    for tile in config.tiles:
+        tile.draw(screen)
+    
+    
+    
     

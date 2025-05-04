@@ -36,19 +36,18 @@ class GameObject:
         
         
 
-class ball(GameObject):
-    def __init__(self,image):   
+class Ball(GameObject):
+    def __init__(self,image,x_pos,y_pos):   
         super().__init__(image)
         self.speed_x = 10
         self.speed_y = -10
         self.offset_x = 18
         self.offset_y = 18
-        self.rect.x = config.screen_width / 2 - (self.offset_x/2)
-        self.rect.y = 500 - (self.offset_y/2)
+        self.rect.x = x_pos
+        self.rect.y = y_pos
         self.float_x = self.rect.x
         self.float_y = self.rect.y
         self.previous_rect = self.rect.copy()
-        self.step = 1
     def update(self):
         if self.rect.x <= 0:
             self.speed_x = abs(self.speed_x)
@@ -159,9 +158,9 @@ class health:
             config.tiles.clear()
 def main():
     clock = pygame.time.Clock()
-    ball1 = ball(BALL)
-    background1 = background(BACKGROUND)
+    action.add_balls(config.balls,config.ball_count,Ball,BALL,config.screen_width / 2 - 9,500 - 9)
     bar1 = bar(BAR)
+    background1 = background(BACKGROUND)
     health1 = health()
     
     while config.main_run:
@@ -170,25 +169,29 @@ def main():
                 config.main_run = False
                 config.menu_run = False
         
-                
+
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         
-        ball1.draw(screen)
         bar1.draw(screen)
         bar1.update(userinput)
         config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
         
-        if action.circle_rect_collide(ball1.rect.center,ball1.offset_x/2,bar1.rect):
-            ball1.speed_x,ball1.speed_y = action.collision(ball1,bar1)
+        for ball in reversed(config.balls):
+            ball.draw(screen)
+            if action.circle_rect_collide(ball.rect.center,ball.offset_x/2,bar1.rect):
+                ball.speed_x,ball.speed_y = action.collision(ball,bar1)
+                config.balls = action.add_balls(config.balls,config.ball_count,Ball,BALL,config.screen_width / 2 - 9,500 - 9)
             
-        if ball1.rect.y >= 700 - ball1.rect.height:
-            health1.current_hp -= 1
+            if ball.rect.y >= 700 - ball.rect.height:
+                health1.current_hp -= 1
+                action.delete_balls(ball)
+            ball.update()
+            action.tile_action(ball,config.tiles)
+        
         health1.update(screen)
+        action.draw_tiles(screen)   
             
-            
-        ball1.update()
-        action.tile_action(ball1,config.tiles,screen)
         screen.blit(config.score_text,(990,650))
         
         fps = clock.get_fps()
