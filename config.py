@@ -3,7 +3,8 @@ import os
 
 screen_height = 700
 screen_width = 1200
-run  = True
+main_run  = True
+menu_run  = True
 gamespeed = 15
 tiles = []
 tile_amount = 240
@@ -16,7 +17,17 @@ font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 40)
 menu_font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 60)
 
 score_text = font.render(f"Your score  {points}",True,(255,255,255))
-menu_text = menu_font.render(f"Press any left / right to Start!",True,(255,255,255))
-menu_text_rect = menu_text.get_rect()
-menu_text_rect.center = (screen_width/2,screen_height/2+50)
+start_menu_text = menu_font.render(f"Press left / right to start!",True,(255,255,255))
+start_text_rect = start_menu_text.get_rect()
+start_text_rect.center = (screen_width/2,screen_height/2-50)
 
+
+end_menu_text2 = menu_font.render(f"Press left and right to continue!",True,(255,255,255))
+end_text_rect2 = end_menu_text2.get_rect()
+end_text_rect2.center = (screen_width/2,screen_height/2)
+
+
+end_menu_text1 = menu_font.render(f"GAME  OVER!",True,(255,255,255))
+end_text_rect1 = end_menu_text1.get_rect()
+end_text_offset = (end_text_rect2.width - end_text_rect1.width) / 2
+end_text_rect1.center = (screen_width/2,screen_height/2-50)

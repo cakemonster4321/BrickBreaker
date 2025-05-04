@@ -154,8 +154,8 @@ class health:
             screen.blit(self.empty_image,(self.right_end,self.rect.y))
             self.right_end += self.rect.width*2/3              
             
-        print("current_heart:",self.full_heart_count)
-        print("lost_heart:",self.empty_heart_count)
+        if self.current_hp == 0:
+            config.main_run = False
 
 def main():
     clock = pygame.time.Clock()
@@ -164,10 +164,11 @@ def main():
     bar1 = bar(BAR)
     health1 = health()
     
-    while config.run:
+    while config.main_run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                config.run = False
+                config.main_run = False
+                config.menu_run = False
         
                 
         background1.draw(screen)
@@ -198,26 +199,43 @@ def main():
         pygame.display.update()
         
         if not config.has_initialized:
-            pygame.time.wait(2000)
+            pygame.time.wait(1500)
             config.has_initialized = True
         
         clock.tick(60)   
-    pygame.quit()
-    sys.exit()
+    
 
 
 def menu(): 
-    config.run = True
-    while config.run:
+    config.menu_run = True
+    while config.menu_run:
         screen.fill((195,131,179))
-        screen.blit(config.menu_text,config.menu_text_rect)
+        screen.blit(config.start_menu_text,config.start_text_rect)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                config.run = False
+                config.main_run = False
+                config.menu_run = False
             if event.type == pygame.KEYDOWN:
-                pygame.time.wait(500)
+                pygame.time.wait(200)
                 main()
+        
+        while config.menu_run == True and config.main_run == False:
+            screen.fill((162,177,255))
+            screen.blit(config.end_menu_text1,config.end_text_rect1)
+            screen.blit(config.end_menu_text2,config.end_text_rect2)
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    config.main_run = False
+                    config.menu_run = False
+                if event.type == pygame.KEYDOWN:
+                    pygame.time.wait(200)
+                    config.main_run = True
+                    break
+        
+        
+        
     
     
     pygame.quit()
