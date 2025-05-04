@@ -110,7 +110,7 @@ def tile_generation(tiles,tile,image,amount):
 
 def score():
     config.points += 1
-    config.score_text = config.font.render(f"Your score  {config.points}",True,(255,255,255))
+    config.score_text = config.font.render(f"Your score  {config.points}",False,(255,255,255))
     
     return config.score_text
     

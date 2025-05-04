@@ -10,17 +10,17 @@ pygame.init()
 screen = pygame.display.set_mode((config.screen_width,config.screen_height))
 pygame.display.set_caption("Brick Breaker")
 
-BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png"))
-BAR = pygame.image.load(os.path.join("assets/Bar/bar.png"))
-BALL = pygame.image.load(os.path.join("assets/Ball/ball.png"))
+BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png")).convert_alpha()
+BAR = pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha()
+BALL = pygame.image.load(os.path.join("assets/Ball/ball.png")).convert_alpha()
 TILE = [
-    pygame.image.load(os.path.join("assets/Tiles/tile1.png")),
-    pygame.image.load(os.path.join("assets/Tiles/tile2.png"))
+    pygame.image.load(os.path.join("assets/Tiles/tile1.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/tile2.png")).convert_alpha()
 ]
 HEALTH = [
-    pygame.image.load(os.path.join("assets/Health/full_heart.png")),
-    pygame.image.load(os.path.join("assets/Health/half_heart.png")),
-    pygame.image.load(os.path.join("assets/Health/empty_heart.png"))
+    pygame.image.load(os.path.join("assets/Health/full_heart.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Health/half_heart.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Health/empty_heart.png")).convert_alpha()
 ]
 class GameObject:
     
@@ -192,7 +192,7 @@ def main():
         screen.blit(config.score_text,(990,650))
         
         fps = clock.get_fps()
-        fps_text = config.font.render(f"FPS: {fps:.2f}", True, (255, 255, 255))
+        fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
         screen.blit(fps_text, (800, 650))
         
         
