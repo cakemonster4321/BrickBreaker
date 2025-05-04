@@ -17,6 +17,11 @@ TILE = [
     pygame.image.load(os.path.join("assets/Tiles/tile1.png")),
     pygame.image.load(os.path.join("assets/Tiles/tile2.png"))
 ]
+HEALTH = [
+    pygame.image.load(os.path.join("assets/Health/full_heart.png")),
+    pygame.image.load(os.path.join("assets/Health/half_heart.png")),
+    pygame.image.load(os.path.join("assets/Health/empty_heart.png"))
+]
 class GameObject:
     
     def __init__(self,image):
@@ -111,18 +116,59 @@ class background:
     def draw(self,screen):
         screen.blit(self.image,(self.x,self.y))
  
+class health:
+    def __init__(self):
+        self.image = HEALTH[0] 
+        assert isinstance(self.image, pygame.Surface)   
+        self.rect = self.image.get_rect()
+        self.rect.x = 200
+        self.rect.y = 640
+        self.full_image = HEALTH[0] 
+        self.half_image = HEALTH[1] 
+        self.empty_image = HEALTH[2]
+        self.full_hp = 10
+        self.current_hp = self.full_hp
+        self.lost_hp = 0
+        self.half_heart_count = 0                
+        self.empty_heart_count = 0                    
+        self.full_heart_count = int(self.current_hp / 2)
+    def update(self,screen):
+        self.rect.x = 10
+        self.right_end = self.rect.x
+        self.lost_hp = self.full_hp - self.current_hp
+        self.full_heart_count = int(self.current_hp / 2)
+        self.empty_heart_count = int(int(self.lost_hp)/2)
+        
+        if self.current_hp != 0 and self.current_hp % 2 == 1:
+            self.half_heart_count = 1
+        else:
+            self.half_heart_count = 0    
+                        
+        for _ in range(0,self.full_heart_count):
+            screen.blit(self.full_image,(self.right_end,self.rect.y))
+            self.right_end += self.rect.width*2/3
+        if self.half_heart_count == 1:
+            screen.blit(self.half_image,(self.right_end,self.rect.y))
+            self.right_end += self.rect.width*2/3
+        for _ in range(0,self.empty_heart_count):
+            screen.blit(self.empty_image,(self.right_end,self.rect.y))
+            self.right_end += self.rect.width*2/3              
+            
+        if self.current_hp == 0:
+            config.main_run = False
 
 def main():
     clock = pygame.time.Clock()
     ball1 = ball(BALL)
     background1 = background(BACKGROUND)
     bar1 = bar(BAR)
+    health1 = health()
     
-    
-    while config.run:
+    while config.main_run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                config.run = False
+                config.main_run = False
+                config.menu_run = False
         
                 
         background1.draw(screen)
@@ -131,11 +177,15 @@ def main():
         ball1.draw(screen)
         bar1.draw(screen)
         bar1.update(userinput)
-        
         config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
         
         if action.circle_rect_collide(ball1.rect.center,ball1.offset_x/2,bar1.rect):
             ball1.speed_x,ball1.speed_y = action.collision(ball1,bar1)
+            
+        if ball1.rect.y >= 700 - ball1.rect.height:
+            health1.current_hp -= 1
+        health1.update(screen)
+            
             
         ball1.update()
         action.tile_action(ball1,config.tiles,screen)
@@ -143,31 +193,49 @@ def main():
         
         fps = clock.get_fps()
         fps_text = config.font.render(f"FPS: {fps:.2f}", True, (255, 255, 255))
-        screen.blit(fps_text, (10, 650))
+        screen.blit(fps_text, (800, 650))
+        
         
         pygame.display.update()
         
         if not config.has_initialized:
-            pygame.time.wait(2000)
+            pygame.time.wait(1500)
             config.has_initialized = True
         
         clock.tick(60)   
-    pygame.quit()
-    sys.exit()
+    
 
 
 def menu(): 
-    config.run = True
-    while config.run:
+    config.menu_run = True
+    while config.menu_run:
         screen.fill((195,131,179))
-        screen.blit(config.menu_text,config.menu_text_rect)
+        screen.blit(config.start_menu_text,config.start_text_rect)
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                config.run = False
+                config.main_run = False
+                config.menu_run = False
             if event.type == pygame.KEYDOWN:
-                pygame.time.wait(500)
+                pygame.time.wait(200)
                 main()
+        
+        while config.menu_run == True and config.main_run == False:
+            screen.fill((162,177,255))
+            screen.blit(config.end_menu_text1,config.end_text_rect1)
+            screen.blit(config.end_menu_text2,config.end_text_rect2)
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    config.main_run = False
+                    config.menu_run = False
+                if event.type == pygame.KEYDOWN:
+                    pygame.time.wait(200)
+                    config.main_run = True
+                    break
+        
+        
+        
     
     
     pygame.quit()
