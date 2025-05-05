@@ -12,7 +12,7 @@ pygame.display.set_caption("Brick Breaker")
 
 BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png")).convert_alpha()
 BAR = pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha()
-BALL = pygame.image.load(os.path.join("assets/Ball/ball.png")).convert_alpha()
+BALL = pygame.image.load(os.path.join("assets/Ball/normal_ball.png")).convert_alpha()
 TILE = [
     pygame.image.load(os.path.join("assets/Tiles/tile1.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/tile2.png")).convert_alpha()
@@ -53,8 +53,7 @@ class Ball(GameObject):
             self.speed_x = -abs(self.speed_x)
         if self.rect.y <= 0:
             self.speed_y = abs(self.speed_y)
-        if self.rect.y >= config.screen_height - self.offset_y:
-            self.speed_y = -abs(self.speed_y)
+
         
         self.previous_rect = self.rect.copy()
         
@@ -152,11 +151,11 @@ class health:
             config.tiles.clear()
 def main():
     clock = pygame.time.Clock()
-    action.add_balls(BALL,Ball,config.screen_width / 2 - 9,500 - 9, config.ballspeed_x, config.ballspeed_y)
-    config.balls.extend(config.to_add)
+    config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - 9,500 - 9, config.ballspeed_x, config.ballspeed_y))
     bar1 = bar(BAR)
     background1 = background(BACKGROUND)
     health1 = health()
+    count =0
     
     while config.main_run:
         for event in pygame.event.get():
@@ -168,25 +167,28 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         
-        bar1.draw(screen)
-        bar1.update(userinput)
         config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
         
-        config.to_add.clear()
-        for ball in config.balls[:]:
-            ball.update()
+        for ball in config.balls:
             ball.draw(screen)
-            
+            ball.update()
+                
             if action.circle_rect_collide(ball.rect.center,ball.offset_x/2,bar1.rect):
+                print("yes")
+                print(ball.rect)
                 ball.speed_x,ball.speed_y = action.collision(ball,bar1)
             
             action.delete_balls(ball,health1)
             action.tile_action(ball,config.tiles,Ball,BALL)
+            
                 
         health1.update(screen)
         action.draw_tiles(screen)   
+        bar1.draw(screen)
+        bar1.update(userinput)
+        
         if config.to_add:
-            print("yes")
+            
             config.balls.extend(config.to_add)
             config.to_add.clear()
         

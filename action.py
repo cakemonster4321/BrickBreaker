@@ -31,70 +31,77 @@ def collision(ball,object):
 
             
     if direction == "top":
-        if ball.speed_x > 0 and ball.speed_y > 0:
+        if ball.speed_x >= 0 and ball.speed_y >= 0:
             ball.speed_x = abs(ball.speed_x)
             ball.speed_y = -abs(ball.speed_y)
             print("a")
         
-        if ball.speed_x < 0 and ball.speed_y > 0:
+        if ball.speed_x <= 0 and ball.speed_y >= 0:
             ball.speed_x = -abs(ball.speed_x)
             ball.speed_y = -abs(ball.speed_y)
             print("b")
             
     elif direction == "bottom":
-        if ball.speed_y < 0 and ball.speed_x < 0:
+        if ball.speed_y <= 0 and ball.speed_x <= 0:
             ball.speed_y = abs(ball.speed_y)
             ball.speed_x = -abs(ball.speed_x)
             print("e")  
         
-        if ball.speed_y < 0 and ball.speed_x > 0:
+        if ball.speed_y <= 0 and ball.speed_x >= 0:
             ball.speed_x = abs(ball.speed_x)
             ball.speed_y = abs(ball.speed_y) 
             print("f")  
 
     elif direction == "right":        
-        if ball.speed_y > 0 and ball.speed_x < 0:
+        if ball.speed_y >= 0 and ball.speed_x <= 0:
             ball.speed_y = abs(ball.speed_y)
             ball.speed_x = abs(ball.speed_x)
             print("c")
     
-        if ball.speed_y < 0 and ball.speed_x < 0:
+        if ball.speed_y <= 0 and ball.speed_x <= 0:
             ball.speed_y = -abs(ball.speed_y)
             ball.speed_x = abs(ball.speed_x)
             print("d")  
     
     elif direction == "left":    
-        if ball.speed_y > 0 and ball.speed_x > 0:
+        if ball.speed_y >= 0 and ball.speed_x >= 0:
             ball.speed_y = abs(ball.speed_y) 
             ball.speed_x = -abs(ball.speed_x) 
             print("g")  
             
-        if ball.speed_y < 0 and ball.speed_x > 0:
+        if ball.speed_y <= 0 and ball.speed_x >= 0:
             ball.speed_y = -abs(ball.speed_y) 
             ball.speed_x = -abs(ball.speed_x) 
             print("h")  
             
     return ball.speed_x,ball.speed_y
 
-def tile_action(ball,tiles,cls,ball_image):
-    config.to_remove = []
-    check_bounce(ball,tiles)
-            
-    # add_balls(ball_image,cls,tile.rect.center[0],tile.rect.center[1],0,-config.ballspeed_y)
-    # config.ball_count += 1
+def tile_action(ball,tiles,ball_cls,ball_image):
+    to_remove = []
+    tile_break = False
+    tile_break = check_bounce_tileBreak(ball,tiles,to_remove)
+    for tile in to_remove:
+        if tile in tiles:
+            x, y = tile.rect.center
+            tiles.remove(tile)
+    if tile_break:
+        new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
+        config.to_add.append(new_ball)
+    print(len(config.balls))
 
-    for tile in config.to_remove:
-        tiles.remove(tile)
-
-def check_bounce(ball,tiles):
+def check_bounce_tileBreak(ball,tiles,to_remove):
     ball_range = ball.rect.inflate(50,50)
+    hit = False
     for tile in reversed((tiles)):
         if not ball_range.colliderect(tile.rect):
             continue
         if not circle_rect_collide(ball.previous_rect.center,ball.offset_x/2,tile.rect) and circle_rect_collide(ball.rect.center,ball.offset_x/2,tile.rect):
             ball.speed_x,ball.speed_y = collision(ball,tile)
             config.score_text = score()
-            config.to_remove.append(tile)
+            to_remove.append(tile)
+            hit =  True
+    return hit
+            
             
 def tile_generation(tiles,tile,image,amount):
     x_pos = 0
@@ -119,12 +126,13 @@ def score():
     return config.score_text
 
 def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
-    config.to_add.append(cls(image,x_pos,y_pos,speed_x,speed_y))
+    return cls(image,x_pos,y_pos,speed_x,speed_y)
 
 def delete_balls(ball,health):
-    if ball.rect.y >= config.screen_height - ball.rect.height:
-        config.balls.remove(ball)
-        take_damage(health)
+    if ball.rect.y >= config.screen_height + 50:
+        if ball in config.balls:
+            config.balls.remove(ball)
+            take_damage(health)
 
 def take_damage(health):
     health.current_hp -= 1
@@ -136,8 +144,7 @@ def draw_tiles(screen):
 # def block_add_ball(tile,ballspeed_x,ballspeed_y,cls):
 #     config.ball_count += 1
 #     add_balls(config.balls,config.ball_count,cls,config.BALL)
-def clean_to_add():
-    config.to_add.clear()
+
     
 
 

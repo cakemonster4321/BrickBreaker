@@ -2,15 +2,14 @@ import pygame
 import os
 
 screen_height = 700
-screen_width = 1200
+screen_width = 900
 main_run  = True
 menu_run  = True
-ballspeed_x = 8
-ballspeed_y = -8
+ballspeed_x = 5
+ballspeed_y = -5
 balls = []
 to_remove = []
 to_add = []
-ball_count = 1
 tiles = []
 tile_amount = 240
 points = 0
