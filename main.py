@@ -81,8 +81,8 @@ class tile(GameObject):
 class bar(GameObject):
     def __init__(self,image):
         super().__init__(image)
-        self.offset_x = 86
-        self.offset_y = 16
+        self.offset_x = 200
+        self.offset_y = 20
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
         self.rect.y = 600 - (self.offset_y/2)
         self.speed = 15
@@ -146,16 +146,19 @@ class health:
             screen.blit(self.empty_image,(self.right_end,self.rect.y))
             self.right_end += self.rect.width*2/3              
             
-        if self.current_hp == 0:
-            config.main_run = False
-            config.tiles.clear()
+        if self.current_hp <= 0 and config.main_run:
+            print(self.current_hp)
+            action.game_stat_init()
+            
+            
 def main():
     clock = pygame.time.Clock()
     config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - 9,500 - 9, config.ballspeed_x, config.ballspeed_y))
     bar1 = bar(BAR)
     background1 = background(BACKGROUND)
     health1 = health()
-    count =0
+    config.points = 0
+    config.has_initialized = False
     
     while config.main_run:
         for event in pygame.event.get():
@@ -192,14 +195,11 @@ def main():
             config.balls.extend(config.to_add)
             config.to_add.clear()
         
+        action.draw_score(screen)
         
-        screen.blit(config.score_text,(990,650))
+        action.get_fps(clock,screen)
         
-        fps = clock.get_fps()
-        fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
-        screen.blit(fps_text, (800, 650))
-        
-        
+
         pygame.display.update()
         
         if not config.has_initialized:
@@ -213,7 +213,7 @@ def main():
 def menu(): 
     config.menu_run = True
     while config.menu_run:
-        screen.fill((195,131,179))
+        screen.fill((43,24,41))
         screen.blit(config.start_menu_text,config.start_text_rect)
         pygame.display.update()
         for event in pygame.event.get():
@@ -225,9 +225,11 @@ def menu():
                 main()
         
         while config.menu_run == True and config.main_run == False:
-            screen.fill((162,177,255))
+            screen.fill((0,0,0))
+            print(config.points)
             screen.blit(config.end_menu_text1,config.end_text_rect1)
             screen.blit(config.end_menu_text2,config.end_text_rect2)
+            action.draw_total_score(screen)
             pygame.display.update()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -236,7 +238,6 @@ def menu():
                 if event.type == pygame.KEYDOWN:
                     pygame.time.wait(200)
                     config.main_run = True
-                    print("yes")
                     break
         
         

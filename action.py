@@ -121,10 +121,17 @@ def tile_generation(tiles,tile,image,amount):
 
 def score():
     config.points += 1
-    config.score_text = config.font.render(f"Your score  {config.points}",False,(255,255,255))
+    config.score_text = config.font.render(f"Your score : {config.points}",False,(255,255,255))
     
     return config.score_text
 
+def draw_score(screen):
+    screen.blit(config.score_text,(720,660))
+
+def draw_total_score(screen):
+    config.total_points_text = config.menu_font.render(f"You got {config.points}",False,(255,255,255))
+    screen.blit(config.total_points_text,config.total_points_rect)
+    
 def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
     return cls(image,x_pos,y_pos,speed_x,speed_y)
 
@@ -141,6 +148,15 @@ def draw_tiles(screen):
     for tile in config.tiles:
         tile.draw(screen)
 
+def game_stat_init():
+    config.main_run = False
+    config.tiles.clear()
+    config.balls.clear()
+    
+def get_fps(clock,screen):
+    fps = clock.get_fps()
+    fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
+    screen.blit(fps_text, (720, 630))
 # def block_add_ball(tile,ballspeed_x,ballspeed_y,cls):
 #     config.ball_count += 1
 #     add_balls(config.balls,config.ball_count,cls,config.BALL)
