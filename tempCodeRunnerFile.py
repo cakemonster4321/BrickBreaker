@@ -1,0 +1,1 @@
+action.delete_balls(ball)

@@ -76,8 +76,17 @@ def collision(ball,object):
             
     return ball.speed_x,ball.speed_y
 
-def tile_action(ball,tiles):
-    to_remove = []
+def tile_action(ball,tiles,cls,ball_image):
+    config.to_remove = []
+    check_bounce(ball,tiles)
+            
+    # add_balls(ball_image,cls,tile.rect.center[0],tile.rect.center[1],0,-config.ballspeed_y)
+    # config.ball_count += 1
+
+    for tile in config.to_remove:
+        tiles.remove(tile)
+
+def check_bounce(ball,tiles):
     ball_range = ball.rect.inflate(50,50)
     for tile in reversed((tiles)):
         if not ball_range.colliderect(tile.rect):
@@ -85,10 +94,8 @@ def tile_action(ball,tiles):
         if not circle_rect_collide(ball.previous_rect.center,ball.offset_x/2,tile.rect) and circle_rect_collide(ball.rect.center,ball.offset_x/2,tile.rect):
             ball.speed_x,ball.speed_y = collision(ball,tile)
             config.score_text = score()
-            to_remove.append(tile)
-    for tile in to_remove:
-        tiles.remove(tile)
-
+            config.to_remove.append(tile)
+            
 def tile_generation(tiles,tile,image,amount):
     x_pos = 0
     y_pos = 0
@@ -111,18 +118,30 @@ def score():
     
     return config.score_text
 
-def add_balls(balls_arr,balls_count,cls,image,x_pos,y_pos):
-    assert isinstance(balls_arr,list)
-    for _ in range(0,balls_count):
-        balls_arr.append(cls(image,x_pos,y_pos))
-    return balls_arr
+def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
+    config.to_add.append(cls(image,x_pos,y_pos,speed_x,speed_y))
 
-def delete_balls(ball):
-    config.balls.remove(ball)
-    
+def delete_balls(ball,health):
+    if ball.rect.y >= config.screen_height - ball.rect.height:
+        config.balls.remove(ball)
+        take_damage(health)
+
+def take_damage(health):
+    health.current_hp -= 1
+
 def draw_tiles(screen):
     for tile in config.tiles:
         tile.draw(screen)
+
+# def block_add_ball(tile,ballspeed_x,ballspeed_y,cls):
+#     config.ball_count += 1
+#     add_balls(config.balls,config.ball_count,cls,config.BALL)
+def clean_to_add():
+    config.to_add.clear()
+    
+
+
+    
     
     
     

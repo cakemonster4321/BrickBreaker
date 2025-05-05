@@ -37,16 +37,14 @@ class GameObject:
         
 
 class Ball(GameObject):
-    def __init__(self,image,x_pos,y_pos):   
+    def __init__(self,image,x_pos,y_pos,speed_x,speed_y):   
         super().__init__(image)
-        self.speed_x = 10
-        self.speed_y = -10
+        self.speed_x = speed_x
+        self.speed_y = speed_y
         self.offset_x = 18
         self.offset_y = 18
         self.rect.x = x_pos
         self.rect.y = y_pos
-        self.float_x = self.rect.x
-        self.float_y = self.rect.y
         self.previous_rect = self.rect.copy()
     def update(self):
         if self.rect.x <= 0:
@@ -60,14 +58,10 @@ class Ball(GameObject):
         
         self.previous_rect = self.rect.copy()
         
-        # self.step = int((max(abs(self.speed_x),abs(self.speed_y)))/10)
-        
-        # self.float_x += self.speed_x / self.step
-        # self.float_y += self.speed_y / self.step
-        # self.rect.x = self.float_x
-        # self.rect.y = self.float_y
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
+        
+
             
         
         
@@ -158,7 +152,8 @@ class health:
             config.tiles.clear()
 def main():
     clock = pygame.time.Clock()
-    action.add_balls(config.balls,config.ball_count,Ball,BALL,config.screen_width / 2 - 9,500 - 9)
+    action.add_balls(BALL,Ball,config.screen_width / 2 - 9,500 - 9, config.ballspeed_x, config.ballspeed_y)
+    config.balls.extend(config.to_add)
     bar1 = bar(BAR)
     background1 = background(BACKGROUND)
     health1 = health()
@@ -177,21 +172,25 @@ def main():
         bar1.update(userinput)
         config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
         
-        for ball in reversed(config.balls):
+        config.to_add.clear()
+        for ball in config.balls[:]:
+            ball.update()
             ball.draw(screen)
+            
             if action.circle_rect_collide(ball.rect.center,ball.offset_x/2,bar1.rect):
                 ball.speed_x,ball.speed_y = action.collision(ball,bar1)
-                config.balls = action.add_balls(config.balls,config.ball_count,Ball,BALL,config.screen_width / 2 - 9,500 - 9)
             
-            if ball.rect.y >= 700 - ball.rect.height:
-                health1.current_hp -= 1
-                action.delete_balls(ball)
-            ball.update()
-            action.tile_action(ball,config.tiles)
-        
+            action.delete_balls(ball,health1)
+            action.tile_action(ball,config.tiles,Ball,BALL)
+                
         health1.update(screen)
         action.draw_tiles(screen)   
-            
+        if config.to_add:
+            print("yes")
+            config.balls.extend(config.to_add)
+            config.to_add.clear()
+        
+        
         screen.blit(config.score_text,(990,650))
         
         fps = clock.get_fps()
