@@ -15,7 +15,12 @@ BAR = pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha()
 BALL = pygame.image.load(os.path.join("assets/Ball/normal_ball.png")).convert_alpha()
 TILE = [
     pygame.image.load(os.path.join("assets/Tiles/tile1.png")).convert_alpha(),
-    pygame.image.load(os.path.join("assets/Tiles/tile2.png")).convert_alpha()
+    pygame.image.load(os.path.join("assets/Tiles/tile2.png")).convert_alpha(),
+    # pygame.image.load(os.path.join("assets/Tiles/normal_tile.png")).convert_alpha(),
+    # pygame.image.load(os.path.join("assets/Tiles/heal_tile.png")).convert_alpha(),
+    # pygame.image.load(os.path.join("assets/Tiles/add_ball_tile.png")).convert_alpha(),
+    # pygame.image.load(os.path.join("assets/Tiles/explode_ball.png")).convert_alpha()
+
 ]
 HEALTH = [
     pygame.image.load(os.path.join("assets/Health/full_heart.png")).convert_alpha(),
