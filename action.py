@@ -1,6 +1,6 @@
 import config
 import random
-
+import pygame
 
 def circle_rect_collide(circle_center, circle_radius, rect):
     closest_x = max(rect.left, min(circle_center[0], rect.right))
@@ -84,10 +84,9 @@ def tile_action(ball,tiles,ball_cls,ball_image):
         if tile in tiles:
             x, y = tile.rect.center
             tiles.remove(tile)
-    if tile_break:
-        new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
-        config.to_add.append(new_ball)
-    print(len(config.balls))
+    # if tile_break:
+        # new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
+        # config.to_add.append(new_ball)
 
 def check_bounce_tileBreak(ball,tiles,to_remove):
     ball_range = ball.rect.inflate(50,50)
@@ -135,8 +134,13 @@ def draw_total_score(screen):
 def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
     return cls(image,x_pos,y_pos,speed_x,speed_y)
 
+def refill_ball(image,ball_cls):
+    if not config.balls:
+        config.balls.append(add_balls(image,ball_cls,config.screen_width/2-image.get_width(),
+        500-image.get_height(),config.ballspeed_x,config.ballspeed_y ))
+
 def delete_balls(ball,health):
-    if ball.rect.y >= config.screen_height + 50:
+    if ball.rect.y >= config.screen_height:
         if ball in config.balls:
             config.balls.remove(ball)
             take_damage(health)

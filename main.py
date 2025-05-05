@@ -46,8 +46,8 @@ class Ball(GameObject):
         super().__init__(image)
         self.speed_x = speed_x
         self.speed_y = speed_y
-        self.offset_x = 18
-        self.offset_y = 18
+        self.offset_x = image.get_width()
+        self.offset_y = image.get_height()
         self.rect.x = x_pos
         self.rect.y = y_pos
         self.previous_rect = self.rect.copy()
@@ -158,7 +158,7 @@ class health:
             
 def main():
     clock = pygame.time.Clock()
-    config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - 9,500 - 9, config.ballspeed_x, config.ballspeed_y))
+    config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - BALL.get_width(),500 - BALL.get_height(), config.ballspeed_x, config.ballspeed_y))
     bar1 = bar(BAR)
     background1 = background(BACKGROUND)
     health1 = health()
@@ -199,6 +199,8 @@ def main():
             
             config.balls.extend(config.to_add)
             config.to_add.clear()
+        
+        action.refill_ball(BALL,Ball)
         
         action.draw_score(screen)
         
