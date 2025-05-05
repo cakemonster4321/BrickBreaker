@@ -22,6 +22,22 @@ pip install pygame
 
 ## features
 
+### Blue tiles
+
+-Normal
+
+### Red tiles
+
+-Healing 
+
+### Green tile
+
+-Adding ball
+
+### Red and Yellow tile
+
+-Expode
+
 Under construction...
 
 
