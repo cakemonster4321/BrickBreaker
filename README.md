@@ -1,6 +1,6 @@
 # 🏀BrickBreaker
 
-# 📄Intro
+## 📄Intro
 
 Hello! This is a small BrickBreaker game I built using python.   
 Since the best way to learn a language is by making a project.  
