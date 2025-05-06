@@ -19,6 +19,9 @@ TILE = [
     pygame.image.load(os.path.join("assets/Tiles/normal_tile3.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/normal_tile4.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/normal_tile5.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/heal_tile.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/new_ball_tile.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/explode_tile.png")).convert_alpha(),
 
 ]
 HEALTH = [

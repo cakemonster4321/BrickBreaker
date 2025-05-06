@@ -108,12 +108,26 @@ def tile_generation(tiles,tile,image):
     x_pos = x_start_pos
     y_pos = y_start_pos
     gap = 10
+    location_arr = []
+    
     assert isinstance(tiles,list)
     assert isinstance(image,list)
     if len(tiles) == 0:
         for i in range(0,config.tile_row):
-            for j in range(0,config.tile_column):        
-                tiles.append(tile(image[i],x_pos,y_pos))
+            for j in range(0,config.tile_column):
+                type = tile_type()
+                print(type)
+                if type == "heal":        
+                    tiles.append(tile(image[5],x_pos,y_pos))
+                    print(1)
+                elif type == "new_ball":
+                    tiles.append(tile(image[6],x_pos,y_pos))
+                    print(2)
+                elif type == "explode":
+                    tiles.append(tile(image[7],x_pos,y_pos))
+                    print(3)
+                else:
+                    tiles.append(tile(image[i],x_pos,y_pos))
                 x_pos += (image[0].get_width() + gap)
             x_pos = x_start_pos
             y_pos += image[0].get_height() + 10  
@@ -121,6 +135,20 @@ def tile_generation(tiles,tile,image):
         if config.round != 1:
             config.balls.clear()
     return tiles
+
+def tile_type():
+    num = random.randint(0,7)
+    type = "normal"
+    if num == 0 or num == 4:
+        type = "normal"
+    elif num == 1:
+        type = "heal"
+    elif num == 2:
+        type = "new_ball"
+    elif num == 3:
+        type = "explode"
+    
+    return type
 
 def score():
     config.points += 1
