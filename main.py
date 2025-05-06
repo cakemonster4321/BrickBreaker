@@ -216,7 +216,8 @@ def main():
 def menu(): 
     config.menu_run = True
     while config.menu_run:
-        screen.fill((43,24,41))
+        screen.fill((203,189,173))
+        screen.blit(config.logo_menu_text,config.logo_menu_rect)
         screen.blit(config.start_menu_text,config.start_text_rect)
         pygame.display.update()
         for event in pygame.event.get():

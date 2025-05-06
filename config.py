@@ -22,11 +22,18 @@ ball_refilled = False
 pygame.font.init()
 font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 35)
 menu_font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 60)
+logo_font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 80)
+
 
 score_text = font.render(f"Your score : {points}",False,(255,255,255))
+
+logo_menu_text = logo_font.render(f"BRICK BREAKER",False,(0,0,0))
+logo_menu_rect = logo_menu_text.get_rect()
+logo_menu_rect.center = (screen_width/2,screen_height/2-100)
+
 start_menu_text = menu_font.render(f"Press left or right to start!",False,(255,255,255))
 start_text_rect = start_menu_text.get_rect()
-start_text_rect.center = (screen_width/2,screen_height/2-50)
+start_text_rect.center = (screen_width/2,screen_height/2+100)
 
 
 end_menu_text2 = menu_font.render(f"Press left or right to continue !",False,(255,255,255))
