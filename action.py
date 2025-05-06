@@ -134,29 +134,27 @@ def draw_total_score(screen):
 def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
     return cls(image,x_pos,y_pos,speed_x,speed_y)
 
-def refill_ball(image,ball_cls,userinput):
-    left = False
-    right = False
-    if not config.balls:
-        config.balls.append(add_balls(image,ball_cls,config.screen_width/2-image.get_width(),
+def refill_ball(image,ball_cls,userinput,bar1):
+    if not config.balls and config.has_initialized:
+        config.balls.append(add_balls(image,ball_cls,bar1.rect.center[0]-image.get_width()/2,
         500-image.get_height(),0,0 ))
         config.ball_refilled = True
     if len(config.balls) == 1 and config.ball_refilled:
-        if userinput[pygame.K_LEFT] and not userinput[pygame.K_RIGHT]:
-            left = True
-        if userinput[pygame.K_RIGHT] and not userinput[pygame.K_LEFT]:
-            right = True
-        for ball in config.balls:
-            if left:
-                ball.speed_x = -config.ballspeed_x
-                ball.speed_y = config.ballspeed_y
-                config.ball_refilled = False
-            elif right:
-                ball.speed_x = config.ballspeed_x
-                ball.speed_y = config.ballspeed_y
-                config.ball_refilled = False
-    print(config.ball_refilled)
+        shoot_ball(userinput)
+    config.ball_refilled = False        
         
+def shoot_ball(userinput):
+
+    for ball in config.balls:
+        if ball.speed_x != 0 and ball.speed_y != 0:
+            break
+        elif userinput[pygame.K_LEFT]:
+            ball.speed_x = -config.ballspeed_x
+            ball.speed_y = config.ballspeed_y
+            # print("yes")
+        elif userinput[pygame.K_RIGHT]:
+            ball.speed_x = config.ballspeed_x
+            ball.speed_y = config.ballspeed_y
 
 def delete_balls(ball,health):
     if ball.rect.y >= config.screen_height:
@@ -171,10 +169,12 @@ def draw_tiles(screen):
     for tile in config.tiles:
         tile.draw(screen)
 
-def game_stat_init():
+def game_stat_end():
     config.main_run = False
     config.tiles.clear()
     config.balls.clear()
+    config.ball_refilled = False
+    config.has_initialized = False
     
 def get_fps(clock,screen):
     fps = clock.get_fps()
