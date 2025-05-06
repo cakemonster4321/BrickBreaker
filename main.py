@@ -44,7 +44,7 @@ class GameObject:
         
 
 class Ball(GameObject):
-    def __init__(self,image,x_pos,y_pos,speed_x,speed_y):   
+    def __init__(self,image,x_pos,y_pos,speed_x,speed_y,if_original):   
         super().__init__(image)
         self.speed_x = speed_x
         self.speed_y = speed_y
@@ -53,6 +53,7 @@ class Ball(GameObject):
         self.rect.x = x_pos
         self.rect.y = y_pos
         self.previous_rect = self.rect.copy()
+        self.original_ball = if_original
     def update(self):
         if self.rect.x <= 0:
             self.speed_x = abs(self.speed_x)
@@ -75,11 +76,11 @@ class Ball(GameObject):
         
 
 class tile(GameObject):
-    def __init__(self,image,x_pos,y_pos):
+    def __init__(self,image,x_pos,y_pos,type):
         super().__init__(image)
         self.rect.x = x_pos
         self.rect.y = y_pos
-    
+        self.type = type
     
     def draw(self,screen):
         screen.blit(self.image,(self.rect.x,self.rect.y))
@@ -161,7 +162,7 @@ class health:
 def main():
     clock = pygame.time.Clock()
     bar1 = bar(BAR)
-    config.balls.append(action.add_balls(BALL,Ball,bar1.rect.center[0]-BALL.get_width()/2,500 - BALL.get_height()/2, 0, 0))
+    config.balls.append(action.add_balls(BALL,Ball,bar1.rect.center[0]-BALL.get_width()/2,550 - BALL.get_height()/2, 0, 0,True))
     background1 = background(BACKGROUND)
     health1 = health()
     config.points = 0
