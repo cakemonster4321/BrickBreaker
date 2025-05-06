@@ -102,20 +102,22 @@ def check_bounce_tileBreak(ball,tiles,to_remove):
     return hit
             
             
-def tile_generation(tiles,tile,image,amount):
-    x_pos = 0
-    y_pos = 0
+def tile_generation(tiles,tile,image):
+    x_start_pos = 45
+    y_start_pos = 45
+    x_pos = x_start_pos
+    y_pos = y_start_pos
+    gap = 10
     assert isinstance(tiles,list)
     assert isinstance(image,list)
     if len(tiles) == 0:
-        for _ in range(0,amount):
-            num = random.randint(0,1)
-            tiles.append(tile(image[num],x_pos,y_pos))
-            x_pos += 30
+        for i in range(0,config.tile_row):
+            for j in range(0,config.tile_column):        
+                tiles.append(tile(image[i],x_pos,y_pos))
+                x_pos += (image[0].get_width() + gap)
+            x_pos = x_start_pos
+            y_pos += image[0].get_height() + 10  
             
-            if x_pos == config.screen_width:
-                y_pos += 30
-                x_pos = 0
     return tiles
 
 def score():

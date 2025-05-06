@@ -14,12 +14,11 @@ BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png"))
 BAR = pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha()
 BALL = pygame.image.load(os.path.join("assets/Ball/normal_ball.png")).convert_alpha()
 TILE = [
-    pygame.image.load(os.path.join("assets/Tiles/tile1.png")).convert_alpha(),
-    pygame.image.load(os.path.join("assets/Tiles/tile2.png")).convert_alpha(),
-    # pygame.image.load(os.path.join("assets/Tiles/normal_tile.png")).convert_alpha(),
-    # pygame.image.load(os.path.join("assets/Tiles/heal_tile.png")).convert_alpha(),
-    # pygame.image.load(os.path.join("assets/Tiles/add_ball_tile.png")).convert_alpha(),
-    # pygame.image.load(os.path.join("assets/Tiles/explode_ball.png")).convert_alpha()
+    pygame.image.load(os.path.join("assets/Tiles/normal_tile1.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/normal_tile2.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/normal_tile3.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/normal_tile4.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/normal_tile5.png")).convert_alpha(),
 
 ]
 HEALTH = [
@@ -175,7 +174,7 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         action.shoot_ball(userinput)
-        config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
+        config.tiles = action.tile_generation(config.tiles,tile,TILE)
         
         for ball in config.balls:
             ball.draw(screen)
