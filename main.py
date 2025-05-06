@@ -86,8 +86,8 @@ class tile(GameObject):
 class bar(GameObject):
     def __init__(self,image):
         super().__init__(image)
-        self.offset_x = 200
-        self.offset_y = 20
+        self.offset_x = self.image.get_width()
+        self.offset_y = self.image.get_height()
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
         self.rect.y = 600 - (self.offset_y/2)
         self.speed = 15
@@ -158,7 +158,7 @@ class health:
             
 def main():
     clock = pygame.time.Clock()
-    config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - BALL.get_width(),500 - BALL.get_height(), config.ballspeed_x, config.ballspeed_y))
+    config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - BALL.get_width()/2,500 - BALL.get_height(), config.ballspeed_x, config.ballspeed_y))
     bar1 = bar(BAR)
     background1 = background(BACKGROUND)
     health1 = health()
