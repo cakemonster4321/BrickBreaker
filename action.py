@@ -134,10 +134,29 @@ def draw_total_score(screen):
 def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
     return cls(image,x_pos,y_pos,speed_x,speed_y)
 
-def refill_ball(image,ball_cls):
+def refill_ball(image,ball_cls,userinput):
+    left = False
+    right = False
     if not config.balls:
         config.balls.append(add_balls(image,ball_cls,config.screen_width/2-image.get_width(),
-        500-image.get_height(),config.ballspeed_x,config.ballspeed_y ))
+        500-image.get_height(),0,0 ))
+        config.ball_refilled = True
+    if len(config.balls) == 1 and config.ball_refilled:
+        if userinput[pygame.K_LEFT] and not userinput[pygame.K_RIGHT]:
+            left = True
+        if userinput[pygame.K_RIGHT] and not userinput[pygame.K_LEFT]:
+            right = True
+        for ball in config.balls:
+            if left:
+                ball.speed_x = -config.ballspeed_x
+                ball.speed_y = config.ballspeed_y
+                config.ball_refilled = False
+            elif right:
+                ball.speed_x = config.ballspeed_x
+                ball.speed_y = config.ballspeed_y
+                config.ball_refilled = False
+    print(config.ball_refilled)
+        
 
 def delete_balls(ball,health):
     if ball.rect.y >= config.screen_height:

@@ -200,7 +200,7 @@ def main():
             config.balls.extend(config.to_add)
             config.to_add.clear()
         
-        action.refill_ball(BALL,Ball)
+        action.refill_ball(BALL,Ball,userinput)
         
         action.draw_score(screen)
         

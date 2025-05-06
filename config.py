@@ -16,6 +16,7 @@ points = 0
 health = 3
 has_initialized = False
 game_over = False
+ball_refilled = False
 
 pygame.font.init()
 font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 35)
