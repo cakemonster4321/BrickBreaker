@@ -153,17 +153,17 @@ class health:
             
         if self.current_hp <= 0 and config.main_run:
             print(self.current_hp)
-            action.game_stat_init()
+            action.game_stat_end()
             
             
 def main():
     clock = pygame.time.Clock()
-    config.balls.append(action.add_balls(BALL,Ball,config.screen_width / 2 - BALL.get_width()/2,500 - BALL.get_height(), config.ballspeed_x, config.ballspeed_y))
     bar1 = bar(BAR)
+    config.balls.append(action.add_balls(BALL,Ball,bar1.rect.center[0]-BALL.get_width()/2,500 - BALL.get_height()/2, 0, 0))
     background1 = background(BACKGROUND)
     health1 = health()
     config.points = 0
-    config.has_initialized = False
+    config.has_initialized = True
     
     while config.main_run:
         for event in pygame.event.get():
@@ -174,7 +174,7 @@ def main():
 
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
-        
+        action.shoot_ball(userinput)
         config.tiles = action.tile_generation(config.tiles,tile,TILE,config.tile_amount)
         
         for ball in config.balls:
@@ -196,11 +196,10 @@ def main():
         bar1.update(userinput)
         
         if config.to_add:
-            
             config.balls.extend(config.to_add)
             config.to_add.clear()
         
-        action.refill_ball(BALL,Ball,userinput)
+        action.refill_ball(BALL,Ball,userinput,bar1)
         
         action.draw_score(screen)
         
@@ -209,9 +208,7 @@ def main():
 
         pygame.display.update()
         
-        if not config.has_initialized:
-            pygame.time.wait(1500)
-            config.has_initialized = True
+        
         
         clock.tick(60)   
     
@@ -233,7 +230,6 @@ def menu():
         
         while config.menu_run == True and config.main_run == False:
             screen.fill((0,0,0))
-            print(config.points)
             screen.blit(config.end_menu_text1,config.end_text_rect1)
             screen.blit(config.end_menu_text2,config.end_text_rect2)
             action.draw_total_score(screen)
