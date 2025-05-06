@@ -198,7 +198,7 @@ def main():
             config.balls.extend(config.to_add)
             config.to_add.clear()
         
-        action.refill_ball(BALL,Ball,userinput,bar1)
+        action.refill_ball(BALL,Ball,bar1)
         
         action.draw_score(screen)
         
@@ -207,9 +207,7 @@ def main():
 
         pygame.display.update()
         
-        
-        
-        clock.tick(60)   
+        clock.tick(90)   
     
 
 
@@ -243,10 +241,6 @@ def menu():
                     config.main_run = True
                     break
         
-        
-        
-    
-    
     pygame.quit()
     sys.exit()
 if __name__ == "__main__":

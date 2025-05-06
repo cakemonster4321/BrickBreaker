@@ -14,10 +14,10 @@ tiles = []
 tile_row = 5
 tile_column = 9
 points = 0
-health = 3
 has_initialized = False
 game_over = False
 ball_refilled = False
+round = 0
 
 pygame.font.init()
 font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 35)

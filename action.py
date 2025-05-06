@@ -104,7 +104,7 @@ def check_bounce_tileBreak(ball,tiles,to_remove):
             
 def tile_generation(tiles,tile,image):
     x_start_pos = 45
-    y_start_pos = 45
+    y_start_pos = 55
     x_pos = x_start_pos
     y_pos = y_start_pos
     gap = 10
@@ -117,7 +117,9 @@ def tile_generation(tiles,tile,image):
                 x_pos += (image[0].get_width() + gap)
             x_pos = x_start_pos
             y_pos += image[0].get_height() + 10  
-            
+        config.round += 1
+        if config.round != 1:
+            config.balls.clear()
     return tiles
 
 def score():
@@ -136,14 +138,12 @@ def draw_total_score(screen):
 def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
     return cls(image,x_pos,y_pos,speed_x,speed_y)
 
-def refill_ball(image,ball_cls,userinput,bar1):
+def refill_ball(image,ball_cls,bar1):
     if not config.balls and config.has_initialized:
         config.balls.append(add_balls(image,ball_cls,bar1.rect.center[0]-image.get_width()/2,
         500-image.get_height(),0,0 ))
         config.ball_refilled = True
-    if len(config.balls) == 1 and config.ball_refilled:
-        shoot_ball(userinput)
-    config.ball_refilled = False        
+    config.ball_refilled = False     
         
 def shoot_ball(userinput):
 
