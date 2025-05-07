@@ -199,14 +199,19 @@ def game_stat_end():
     config.main_run = False
     config.tiles.clear()
     config.balls.clear()
+    config.health.clear()
     config.ball_refilled = False
     config.has_initialized = False
     
 
 def tile_add_new_ball(tile,ball_cls,ball_image,ball):
     if tile.type == "new_ball":
-        new_ballspeed = random.randint(-3,3)
-        config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],ball.speed_x+new_ballspeed,ball.speed_y+new_ballspeed,False))
+        new_momentum_x = random.randint(-2,2)
+        new_momentum_y = random.randint(-2,2)
+        new_ballspeed_x = ball.speed_x + new_momentum_x
+        new_ballspeed_y = ball.speed_y + new_momentum_y
+        
+        config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],new_ballspeed_x,new_ballspeed_y,False))
         
 def tile_heal(tile,projectile_cls,image):
     if tile.type == "heal":
