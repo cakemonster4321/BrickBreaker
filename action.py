@@ -82,7 +82,7 @@ def tile_action(ball,tiles,ball_cls,ball_image):
     tile_break = check_bounce_tileBreak(ball,tiles,to_remove)
     for tile in to_remove:
         if tile in tiles:
-            tile_add_new_ball(tile,ball_cls,ball_image)
+            tile_add_new_ball(tile,ball_cls,ball_image,ball)
             tiles.remove(tile)
     # if tile_break:
         # new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
@@ -211,10 +211,10 @@ def get_fps(clock,screen):
     fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
     screen.blit(fps_text, (720, 630))
 
-def tile_add_new_ball(tile,ball_cls,ball_image):
+def tile_add_new_ball(tile,ball_cls,ball_image,ball):
     if tile.type == "new_ball":
         new_ballspeed = random.randint(-3,3)
-        config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],config.ballspeed_x+new_ballspeed,config.ballspeed_y+new_ballspeed,False))
+        config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],ball.speed_x+new_ballspeed,ball.speed_y+new_ballspeed,False))
         
 
 
