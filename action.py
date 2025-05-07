@@ -1,6 +1,7 @@
 import config
 import random
 import pygame
+import time
 
 def circle_rect_collide(circle_center, circle_radius, rect):
     closest_x = max(rect.left, min(circle_center[0], rect.right))
@@ -76,14 +77,14 @@ def collision(ball,object):
             
     return ball.speed_x,ball.speed_y
 
-def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,projectile_image):
+def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar_image):
     to_remove = []
-    tile_break = False
-    tile_break = check_bounce_tileBreak(ball,tiles,to_remove)
+    check_bounce_tileBreak(ball,tiles,to_remove)
     for tile in to_remove:
         if tile in tiles:
             tile_add_new_ball(tile,ball_cls,ball_image,ball)
-            tile_heal(tile,projectile_cls,projectile_image)
+            tile_heal(tile,projectile_cls,heal_image)
+            tile_longbar(tile,projectile_cls,longbar_image)
             tiles.remove(tile)
     # if tile_break:
         # new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
@@ -99,8 +100,6 @@ def check_bounce_tileBreak(ball,tiles,to_remove):
             ball.speed_x,ball.speed_y = collision(ball,tile)
             config.score_text = score()
             to_remove.append(tile)
-            hit =  True
-    return hit
             
             
 def tile_generation(tiles,tile,image):
@@ -119,13 +118,12 @@ def tile_generation(tiles,tile,image):
                 print(type)
                 if type == "heal":        
                     tiles.append(tile(image[5],x_pos,y_pos,type))
-                    print(1)
                 elif type == "new_ball":
                     tiles.append(tile(image[6],x_pos,y_pos,type))
-                    print(2)
                 elif type == "explode":
                     tiles.append(tile(image[7],x_pos,y_pos,type))
-                    print(3)
+                elif type == "longbar":
+                    tiles.append(tile(image[8],x_pos,y_pos,type))
                 else:
                     tiles.append(tile(image[i],x_pos,y_pos,type))
                 x_pos += (image[0].get_width() + gap)
@@ -137,17 +135,18 @@ def tile_generation(tiles,tile,image):
     return tiles
 
 def tile_type():
-    num = random.randint(0,7)
+    num = random.randint(0,13)
     type = "normal"
-    if num == 0 or num == 4 or num == 5:
-        type = "normal"
-    elif num == 1:
+    if num > 3:
+        type = "longbar"
+    elif num == 0:
         type = "heal"
-    elif num == 2:
+    elif num == 1:
         type = "new_ball"
-    elif num == 3:
+    elif num == 2:
         type = "explode"
-    
+    elif num == 3:
+        type = "longbar"
     return type
 
 
@@ -215,8 +214,12 @@ def tile_add_new_ball(tile,ball_cls,ball_image,ball):
         
 def tile_heal(tile,projectile_cls,image):
     if tile.type == "heal":
-        config.heal_projectiles.append(projectile_cls(image,tile.rect.center[0],tile.rect.center[1],config.healspeed_x,config.healspeed_y))
+        config.projectiles.append(projectile_cls(image,tile.rect.center[0],tile.rect.center[1],config.projectile_speed_x,config.projectile_speed_y,"heal"))
         
+def tile_longbar(tile,projectile_cls,image):
+    if  tile.type == "longbar":
+        config.projectiles.append(projectile_cls(image,tile.rect.center[0],tile.rect.center[1],config.projectile_speed_x,config.projectile_speed_y,"longbar"))
+
 def score():
     config.points += 1
     config.score_text = config.font.render(f"Your score : {config.points}",False,(255,255,255))
@@ -228,10 +231,42 @@ def get_fps(clock,screen):
     fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
     screen.blit(fps_text, (720, 630))
 
-def projectile_update(screen,bar_rect,health_obj):
-    for projectile in config.heal_projectiles:
-        projectile.update(bar_rect,health_obj)
+def projectile_update(screen,bar_rect,health_obj,bar):
+    for projectile in config.projectiles:
+        projectile.update(bar_rect,health_obj,bar)
         projectile.draw(screen)
+        
+        
+def long_bar(bar,bar_image,longbar_image):
+    bar.offset_x = bar_image.get_width()
+    bar.offset_y = bar_image.get_height()
+    old_bar_centerx = bar.rect.center[0]
+    old_bar_centery = bar.rect.center[1]
+    if config.long_bar and not config.if_now_called:
+        now = time.time()
+        config.long_bar = True
+        config.if_now_called = True
+        config.end_time = now + 10
+        
+    if time.time() < config.end_time:
+        old_bar_centerx = bar.rect.center[0]
+        old_bar_centery = bar.rect.center[1]
+        bar.image = longbar_image
+        bar.rect = longbar_image.get_rect()
+        bar.rect.center =(old_bar_centerx,old_bar_centery)
+        bar.offset_y = longbar_image.get_height()
+        bar.offset_x = longbar_image.get_width()
+    else:
+        config.long_bar = False
+        config.if_now_called = False
+        bar.image = bar_image
+        bar.rect = bar_image.get_rect()
+        bar.rect.center =(old_bar_centerx,old_bar_centery)
+         
+        
+    
+    
+    
 
     
 
