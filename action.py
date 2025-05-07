@@ -82,7 +82,7 @@ def tile_action(ball,tiles,ball_cls,ball_image):
     tile_break = check_bounce_tileBreak(ball,tiles,to_remove)
     for tile in to_remove:
         if tile in tiles:
-            x, y = tile.rect.center
+            tile_add_new_ball(tile,ball_cls,ball_image)
             tiles.remove(tile)
     # if tile_break:
         # new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
@@ -108,7 +108,6 @@ def tile_generation(tiles,tile,image):
     x_pos = x_start_pos
     y_pos = y_start_pos
     gap = 10
-    location_arr = []
     
     assert isinstance(tiles,list)
     assert isinstance(image,list)
@@ -118,16 +117,16 @@ def tile_generation(tiles,tile,image):
                 type = tile_type()
                 print(type)
                 if type == "heal":        
-                    tiles.append(tile(image[5],x_pos,y_pos))
+                    tiles.append(tile(image[5],x_pos,y_pos,type))
                     print(1)
                 elif type == "new_ball":
-                    tiles.append(tile(image[6],x_pos,y_pos))
+                    tiles.append(tile(image[6],x_pos,y_pos,type))
                     print(2)
                 elif type == "explode":
-                    tiles.append(tile(image[7],x_pos,y_pos))
+                    tiles.append(tile(image[7],x_pos,y_pos,type))
                     print(3)
                 else:
-                    tiles.append(tile(image[i],x_pos,y_pos))
+                    tiles.append(tile(image[i],x_pos,y_pos,type))
                 x_pos += (image[0].get_width() + gap)
             x_pos = x_start_pos
             y_pos += image[0].get_height() + 10  
@@ -163,13 +162,13 @@ def draw_total_score(screen):
     config.total_points_text = config.menu_font.render(f"You got {config.points}",False,(255,255,255))
     screen.blit(config.total_points_text,config.total_points_rect)
     
-def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y):
-    return cls(image,x_pos,y_pos,speed_x,speed_y)
+def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y,if_original):
+    return cls(image,x_pos,y_pos,speed_x,speed_y,if_original)
 
 def refill_ball(image,ball_cls,bar1):
     if not config.balls and config.has_initialized:
         config.balls.append(add_balls(image,ball_cls,bar1.rect.center[0]-image.get_width()/2,
-        500-image.get_height(),0,0 ))
+        550-image.get_height(),0,0,True))
         config.ball_refilled = True
     config.ball_refilled = False     
         
@@ -190,10 +189,11 @@ def delete_balls(ball,health):
     if ball.rect.y >= config.screen_height:
         if ball in config.balls:
             config.balls.remove(ball)
-            take_damage(health)
+            take_damage(health,ball)
 
-def take_damage(health):
-    health.current_hp -= 1
+def take_damage(health,ball):
+    if ball.original_ball:
+        health.current_hp -= 1
 
 def draw_tiles(screen):
     for tile in config.tiles:
@@ -210,9 +210,14 @@ def get_fps(clock,screen):
     fps = clock.get_fps()
     fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
     screen.blit(fps_text, (720, 630))
-# def block_add_ball(tile,ballspeed_x,ballspeed_y,cls):
-#     config.ball_count += 1
-#     add_balls(config.balls,config.ball_count,cls,config.BALL)
+
+def tile_add_new_ball(tile,ball_cls,ball_image):
+    if tile.type == "new_ball":
+        new_ballspeed = random.randint(-3,3)
+        config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],config.ballspeed_x+new_ballspeed,config.ballspeed_y+new_ballspeed,False))
+        
+
+
 
     
 
