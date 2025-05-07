@@ -139,7 +139,7 @@ def tile_generation(tiles,tile,image):
 def tile_type():
     num = random.randint(0,7)
     type = "normal"
-    if num == 0 or num == 4:
+    if num == 0 or num == 4 or num == 5:
         type = "normal"
     elif num == 1:
         type = "heal"
@@ -227,7 +227,6 @@ def projectile_update(screen,bar_rect,health_obj):
     for projectile in config.heal_projectiles:
         projectile.update(bar_rect,health_obj)
         projectile.draw(screen)
-        
 
     
 
