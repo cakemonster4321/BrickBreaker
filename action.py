@@ -76,13 +76,14 @@ def collision(ball,object):
             
     return ball.speed_x,ball.speed_y
 
-def tile_action(ball,tiles,ball_cls,ball_image):
+def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,projectile_image):
     to_remove = []
     tile_break = False
     tile_break = check_bounce_tileBreak(ball,tiles,to_remove)
     for tile in to_remove:
         if tile in tiles:
             tile_add_new_ball(tile,ball_cls,ball_image,ball)
+            tile_heal(tile,projectile_cls,projectile_image)
             tiles.remove(tile)
     # if tile_break:
         # new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
@@ -149,11 +150,6 @@ def tile_type():
     
     return type
 
-def score():
-    config.points += 1
-    config.score_text = config.font.render(f"Your score : {config.points}",False,(255,255,255))
-    
-    return config.score_text
 
 def draw_score(screen):
     screen.blit(config.score_text,(720,660))
@@ -206,18 +202,32 @@ def game_stat_end():
     config.ball_refilled = False
     config.has_initialized = False
     
-def get_fps(clock,screen):
-    fps = clock.get_fps()
-    fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
-    screen.blit(fps_text, (720, 630))
 
 def tile_add_new_ball(tile,ball_cls,ball_image,ball):
     if tile.type == "new_ball":
         new_ballspeed = random.randint(-3,3)
         config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],ball.speed_x+new_ballspeed,ball.speed_y+new_ballspeed,False))
         
+def tile_heal(tile,projectile_cls,image):
+    if tile.type == "heal":
+        config.heal_projectiles.append(projectile_cls(image,tile.rect.center[0],tile.rect.center[1],config.healspeed_x,config.healspeed_y))
+        
+def score():
+    config.points += 1
+    config.score_text = config.font.render(f"Your score : {config.points}",False,(255,255,255))
+    
+    return config.score_text
 
+def get_fps(clock,screen):
+    fps = clock.get_fps()
+    fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
+    screen.blit(fps_text, (720, 630))
 
+def projectile_update(screen,bar_rect,health_obj):
+    for projectile in config.heal_projectiles:
+        projectile.update(bar_rect,health_obj)
+        projectile.draw(screen)
+        
 
     
 

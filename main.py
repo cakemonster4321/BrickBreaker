@@ -29,6 +29,10 @@ HEALTH = [
     pygame.image.load(os.path.join("assets/Health/half_heart.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Health/empty_heart.png")).convert_alpha()
 ]
+PROJECTILE = [
+    pygame.image.load(os.path.join("assets/Other/health_projectile.png"))    
+]
+
 class GameObject:
     
     def __init__(self,image):
@@ -158,7 +162,29 @@ class health:
             print(self.current_hp)
             action.game_stat_end()
             
+class Projectile(GameObject):
+    def __init__(self,image,pos_x,pos_y,speed_x,speed_y):
+        super().__init__(image)
+        self.image = image
+        self.rect.x = pos_x
+        self.rect.y = pos_y
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+    def update(self,bar_rect,health_obj):
+        if self.rect.colliderect(bar_rect):
+            health_obj.current_hp += 1
+            config.heal_projectiles.pop()
+            if health_obj.current_hp == health_obj.full_hp:
+                health_obj.full_hp += 1
+                health_obj.current_hp += 1
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
+        
             
+        
+        
+            
+    
 def main():
     clock = pygame.time.Clock()
     bar1 = bar(BAR)
@@ -190,9 +216,8 @@ def main():
                 ball.speed_x,ball.speed_y = action.collision(ball,bar1)
             
             action.delete_balls(ball,health1)
-            action.tile_action(ball,config.tiles,Ball,BALL)
-            
-                
+            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0])
+        action.projectile_update(screen,bar1.rect,health1)
         health1.update(screen)
         action.draw_tiles(screen)   
         bar1.draw(screen)
