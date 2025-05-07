@@ -172,11 +172,11 @@ class Projectile(GameObject):
         self.speed_y = speed_y
     def update(self,bar_rect,health_obj):
         if self.rect.colliderect(bar_rect):
-            health_obj.current_hp += 1
-            config.heal_projectiles.pop()
-            if health_obj.current_hp == health_obj.full_hp:
-                health_obj.full_hp += 1
+            if health_obj.current_hp >= health_obj.full_hp:
+                health_obj.current_hp = health_obj.current_hp
+            else: 
                 health_obj.current_hp += 1
+            config.heal_projectiles.pop()
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
         
