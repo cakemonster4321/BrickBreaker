@@ -12,7 +12,12 @@ pygame.display.set_caption("Brick Breaker")
 
 BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png")).convert_alpha()
 BAR = pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha()
-BALL = pygame.image.load(os.path.join("assets/Ball/normal_ball.png")).convert_alpha()
+BALL = [
+    pygame.image.load(os.path.join("assets/Ball/normal_ball.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Ball/red_ball.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Ball/purple_ball.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Ball/green_ball.png")).convert_alpha()
+]
 TILE = [
     pygame.image.load(os.path.join("assets/Tiles/normal_tile1.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/normal_tile2.png")).convert_alpha(),
@@ -97,7 +102,7 @@ class bar(GameObject):
         self.offset_y = self.image.get_height()
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
         self.rect.y = 600 - (self.offset_y/2)
-        self.speed = 15
+        self.speed = 10
     def update(self,userinput):
         if userinput[pygame.K_LEFT] and not userinput[pygame.K_RIGHT]:
             self.rect.x -= self.speed
@@ -188,7 +193,7 @@ class Projectile(GameObject):
 def main():
     clock = pygame.time.Clock()
     bar1 = bar(BAR)
-    config.balls.append(action.add_balls(BALL,Ball,bar1.rect.center[0]-BALL.get_width()/2,550 - BALL.get_height()/2, 0, 0,True))
+    config.balls.append(action.add_balls(BALL[0],Ball,bar1.rect.center[0]-BALL[0].get_width()/2,550 - BALL[0].get_height()/2, 0, 0,True))
     background1 = background(BACKGROUND)
     health1 = health()
     config.points = 0
@@ -236,7 +241,7 @@ def main():
 
         pygame.display.update()
         
-        clock.tick(90)   
+        clock.tick(120)   
     
 
 

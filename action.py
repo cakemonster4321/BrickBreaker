@@ -163,8 +163,8 @@ def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y,if_original):
 
 def refill_ball(image,ball_cls,bar1):
     if not config.balls and config.has_initialized:
-        config.balls.append(add_balls(image,ball_cls,bar1.rect.center[0]-image.get_width()/2,
-        550-image.get_height(),0,0,True))
+        config.balls.append(add_balls(image[0],ball_cls,bar1.rect.center[0]-image[0].get_width()/2,
+        550-image[0].get_height(),0,0,True))
         config.ball_refilled = True
     config.ball_refilled = False     
         
@@ -210,8 +210,8 @@ def tile_add_new_ball(tile,ball_cls,ball_image,ball):
         new_momentum_y = random.randint(-2,2)
         new_ballspeed_x = ball.speed_x + new_momentum_x
         new_ballspeed_y = ball.speed_y + new_momentum_y
-        
-        config.balls.append(add_balls(ball_image,ball_cls,tile.rect.center[0],tile.rect.center[1],new_ballspeed_x,new_ballspeed_y,False))
+        image_num = random.randint(1,3)
+        config.balls.append(add_balls(ball_image[image_num],ball_cls,tile.rect.center[0],tile.rect.center[1],new_ballspeed_x,new_ballspeed_y,False))
         
 def tile_heal(tile,projectile_cls,image):
     if tile.type == "heal":
