@@ -7,10 +7,10 @@ main_run  = True
 menu_run  = True
 ballspeed_x = 3
 ballspeed_y = -3
-healspeed_x = 0
-healspeed_y = 3
+projectile_speed_x = 0
+projectile_speed_y = 3
 balls = []
-heal_projectiles = []
+projectiles = []
 to_remove = []
 to_add = []
 tiles = []
@@ -21,6 +21,9 @@ has_initialized = False
 game_over = False
 ball_refilled = False
 round = 0
+if_now_called = False
+long_bar = False
+end_time = 0
 
 pygame.font.init()
 font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 35)

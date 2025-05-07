@@ -11,7 +11,10 @@ screen = pygame.display.set_mode((config.screen_width,config.screen_height))
 pygame.display.set_caption("Brick Breaker")
 
 BACKGROUND = pygame.image.load(os.path.join("assets/Background/background.png")).convert_alpha()
-BAR = pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha()
+BAR = [
+    pygame.image.load(os.path.join("assets/Bar/bar.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Bar/longbar.png")).convert_alpha()
+]
 BALL = [
     pygame.image.load(os.path.join("assets/Ball/normal_ball.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Ball/red_ball.png")).convert_alpha(),
@@ -27,6 +30,7 @@ TILE = [
     pygame.image.load(os.path.join("assets/Tiles/heal_tile.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/new_ball_tile.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/explode_tile.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/longbar_tile.png")).convert_alpha()
 
 ]
 HEALTH = [
@@ -35,7 +39,8 @@ HEALTH = [
     pygame.image.load(os.path.join("assets/Health/empty_heart.png")).convert_alpha()
 ]
 PROJECTILE = [
-    pygame.image.load(os.path.join("assets/Other/health_projectile.png")) 
+    pygame.image.load(os.path.join("assets/Other/health_projectile.png")).convert_alpha(), 
+    pygame.image.load(os.path.join("assets/Other/bar_projectile.png")).convert_alpha()
 ]
 
 class GameObject:
@@ -168,20 +173,27 @@ class health:
             action.game_stat_end()
             
 class Projectile(GameObject):
-    def __init__(self,image,pos_x,pos_y,speed_x,speed_y):
+    def __init__(self,image,pos_x,pos_y,speed_x,speed_y,type):
         super().__init__(image)
         self.image = image
         self.rect.x = pos_x
         self.rect.y = pos_y
         self.speed_x = speed_x
         self.speed_y = speed_y
-    def update(self,bar_rect,health_obj):
+        self.type = type
+    def update(self,bar_rect,health_obj,bar):
         if self.rect.colliderect(bar_rect):
-            if health_obj.current_hp >= health_obj.full_hp:
-                health_obj.current_hp = health_obj.current_hp
-            else: 
-                health_obj.current_hp += 1
-            config.heal_projectiles.pop()
+            if self.type == "heal":
+                if health_obj.current_hp >= health_obj.full_hp:
+                    health_obj.current_hp = health_obj.current_hp
+                else: 
+                    health_obj.current_hp += 1
+                config.projectiles.remove(self)
+        
+            if self.type == "longbar":
+                config.long_bar = True
+                config.projectiles.remove(self)
+        
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y
         
@@ -192,7 +204,7 @@ class Projectile(GameObject):
     
 def main():
     clock = pygame.time.Clock()
-    bar1 = bar(BAR)
+    bar1 = bar(BAR[0])
     config.balls.append(action.add_balls(BALL[0],Ball,bar1.rect.center[0]-BALL[0].get_width()/2,550 - BALL[0].get_height()/2, 0, 0,True))
     background1 = background(BACKGROUND)
     health1 = health()
@@ -221,8 +233,8 @@ def main():
                 ball.speed_x,ball.speed_y = action.collision(ball,bar1)
             
             action.delete_balls(ball,health1)
-            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0])
-        action.projectile_update(screen,bar1.rect,health1)
+            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0],PROJECTILE[1])
+        action.projectile_update(screen,bar1.rect,health1,bar1)
         health1.update(screen)
         action.draw_tiles(screen)   
         bar1.draw(screen)
@@ -232,12 +244,14 @@ def main():
             config.balls.extend(config.to_add)
             config.to_add.clear()
         
+        action.long_bar(bar1,BAR[0],BAR[1])
+            
+        
         action.refill_ball(BALL,Ball,bar1)
         
         action.draw_score(screen)
         
         action.get_fps(clock,screen)
-        
 
         pygame.display.update()
         
