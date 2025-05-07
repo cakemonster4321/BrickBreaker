@@ -35,7 +35,7 @@ HEALTH = [
     pygame.image.load(os.path.join("assets/Health/empty_heart.png")).convert_alpha()
 ]
 PROJECTILE = [
-    pygame.image.load(os.path.join("assets/Other/health_projectile.png"))    
+    pygame.image.load(os.path.join("assets/Other/health_projectile.png")) 
 ]
 
 class GameObject:
