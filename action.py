@@ -103,11 +103,7 @@ def check_bounce_tileBreak(ball,tiles,to_remove):
             
             
 def tile_generation(tiles,tile,image,screen):
-    x_start_pos = 45
-    y_start_pos = 55
-    x_pos = x_start_pos
-    y_pos = y_start_pos
-    gap = 10
+    pattern = random.randint(0,0)
     draw_round(screen)
     assert isinstance(tiles,list)
     assert isinstance(image,list)
@@ -115,22 +111,7 @@ def tile_generation(tiles,tile,image,screen):
         if round != 1:
             config.balls.clear()
         config.round_text = round()
-        for i in range(0,config.tile_row):
-            for j in range(0,config.tile_column):
-                type = tile_type()
-                if type == "heal":        
-                    tiles.append(tile(image[5],x_pos,y_pos,type))
-                elif type == "new_ball":
-                    tiles.append(tile(image[6],x_pos,y_pos,type))
-                elif type == "explode":
-                    tiles.append(tile(image[7],x_pos,y_pos,type))
-                elif type == "longbar":
-                    tiles.append(tile(image[8],x_pos,y_pos,type))
-                else:
-                    tiles.append(tile(image[i],x_pos,y_pos,type))
-                x_pos += (image[0].get_width() + gap)
-            x_pos = x_start_pos
-            y_pos += image[0].get_height() + 10  
+        tile_pattern(pattern,tiles,tile,image) 
 
         config.round += 1
         
@@ -276,7 +257,29 @@ def long_bar(bar,bar_image,longbar_image):
         bar.rect = bar_image.get_rect()
         bar.rect.center =(old_bar_centerx,old_bar_centery)
          
-        
+def tile_pattern(pattern,tiles,tile_cls,image):
+    if pattern == 0:
+        x_start_pos = 45
+        y_start_pos = 55
+        x_pos = x_start_pos
+        y_pos = y_start_pos
+        gap = 10
+        for i in range(0,config.tile_row):
+                    for j in range(0,config.tile_column):
+                        type = tile_type()
+                        if type == "heal":        
+                            tiles.append(tile_cls(image[5],x_pos,y_pos,type))
+                        elif type == "new_ball":
+                            tiles.append(tile_cls(image[6],x_pos,y_pos,type))
+                        elif type == "explode":
+                            tiles.append(tile_cls(image[7],x_pos,y_pos,type))
+                        elif type == "longbar":
+                            tiles.append(tile_cls(image[8],x_pos,y_pos,type))
+                        else:
+                            tiles.append(tile_cls(image[i],x_pos,y_pos,type))
+                        x_pos += (image[0].get_width() + gap)
+                    x_pos = x_start_pos
+                    y_pos += image[0].get_height() + 10
     
     
     
