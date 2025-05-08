@@ -106,7 +106,7 @@ class bar(GameObject):
         self.offset_x = self.image.get_width()
         self.offset_y = self.image.get_height()
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
-        self.rect.y = 600 - (self.offset_y/2)
+        self.rect.y = 650 - (self.offset_y/2)
         self.speed = 10
     def update(self,userinput):
         if userinput[pygame.K_LEFT] and not userinput[pygame.K_RIGHT]:
@@ -205,7 +205,7 @@ class Projectile(GameObject):
 def main():
     clock = pygame.time.Clock()
     bar1 = bar(BAR[0])
-    config.balls.append(action.add_balls(BALL[0],Ball,bar1.rect.center[0]-BALL[0].get_width()/2,550 - BALL[0].get_height()/2, 0, 0,True))
+    config.balls.append(action.add_balls(BALL[0],Ball,bar1.rect.center[0]-BALL[0].get_width()/2,config.screen_height/2 - BALL[0].get_height()/2, 0, 0,True))
     background1 = background(BACKGROUND)
     health1 = health()
     config.points = 0
