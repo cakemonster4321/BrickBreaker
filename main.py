@@ -106,8 +106,8 @@ class bar(GameObject):
         self.offset_x = self.image.get_width()
         self.offset_y = self.image.get_height()
         self.rect.x = config.screen_width / 2 - (self.offset_x/2)
-        self.rect.y = 600 - (self.offset_y/2)
-        self.speed = 10
+        self.rect.y = config.screen_height - 70 - (self.offset_y/2)
+        self.speed = 12
     def update(self,userinput):
         if userinput[pygame.K_LEFT] and not userinput[pygame.K_RIGHT]:
             self.rect.x -= self.speed
@@ -136,7 +136,7 @@ class health:
         assert isinstance(self.image, pygame.Surface)   
         self.rect = self.image.get_rect()
         self.rect.x = 200
-        self.rect.y = 640
+        self.rect.y = config.screen_height - 60
         self.full_image = HEALTH[0] 
         self.half_image = HEALTH[1] 
         self.empty_image = HEALTH[2]
@@ -210,6 +210,7 @@ def main():
     health1 = health()
     config.points = 0
     config.has_initialized = True
+    config.round = 1
     
     while config.main_run:
         for event in pygame.event.get():

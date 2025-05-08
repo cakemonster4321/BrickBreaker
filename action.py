@@ -134,10 +134,10 @@ def tile_type():
 
 
 def draw_score(screen):
-    screen.blit(config.score_text,(720,600))
+    screen.blit(config.score_text,(720,config.screen_height - 40))
     
 def draw_round(screen):
-    screen.blit(config.round_text,(720,630))
+    screen.blit(config.round_text,(720, config.screen_height - 80))
     
 
 def draw_total_score(screen):
@@ -148,24 +148,27 @@ def add_balls(image,cls,x_pos,y_pos,speed_x,speed_y,if_original):
     return cls(image,x_pos,y_pos,speed_x,speed_y,if_original)
 
 def refill_ball(image,ball_cls,bar1):
-    if not config.balls and config.has_initialized:
+    original_count = 0
+    for ball in config.balls:
+        if ball.original_ball:
+            original_count += 1
+            
+    if not original_count and config.has_initialized:
         config.balls.append(add_balls(image[0],ball_cls,bar1.rect.center[0]-image[0].get_width()/2,
-        550-image[0].get_height(),0,0,True))
-        config.ball_refilled = True
-    config.ball_refilled = False     
+        config.screen_height - 100 -image[0].get_height(),0,0,True))
+    #     config.ball_refilled = True
+    # config.ball_refilled = False     
         
 def shoot_ball(userinput):
 
     for ball in config.balls:
-        if ball.speed_x != 0 and ball.speed_y != 0:
-            break
-        elif userinput[pygame.K_LEFT]:
-            ball.speed_x = -config.ballspeed_x
-            ball.speed_y = config.ballspeed_y
-            # print("yes")
-        elif userinput[pygame.K_RIGHT]:
-            ball.speed_x = config.ballspeed_x
-            ball.speed_y = config.ballspeed_y
+        if ball.original_ball and ball.speed_x == 0 and ball.speed_y == 0:
+            if userinput[pygame.K_LEFT]:
+                ball.speed_x = -config.ballspeed_x
+                ball.speed_y = config.ballspeed_y
+            if userinput[pygame.K_RIGHT]:
+                ball.speed_x = config.ballspeed_x
+                ball.speed_y = config.ballspeed_y
 
 def delete_balls(ball,health):
     if ball.rect.y >= config.screen_height:
@@ -185,20 +188,20 @@ def game_stat_end():
     config.main_run = False
     config.tiles.clear()
     config.balls.clear()
-    config.health.clear()
+    config.projectiles.clear()
     config.ball_refilled = False
     config.has_initialized = False
     
 
 def tile_add_new_ball(tile,ball_cls,ball_image,ball):
     if tile.type == "new_ball":
-        new_momentum_x = random.randint(-2,2)
-        new_momentum_y = random.randint(-2,2)
+        new_momentum_x = random.randint(-1,2)
+        new_momentum_y = random.randint(-1,2)
         new_ballspeed_x = ball.speed_x + new_momentum_x
         new_ballspeed_y = ball.speed_y + new_momentum_y
         if new_ballspeed_x == 0 or new_ballspeed_y == 0:
-            new_ballspeed_x = random.randint(3,6)
-            new_ballspeed_y = random.randint(3,6)
+            new_ballspeed_x = random.randint(3,5)
+            new_ballspeed_y = random.randint(3,5)
         image_num = random.randint(1,3)
         config.balls.append(add_balls(ball_image[image_num],ball_cls,tile.rect.center[0],tile.rect.center[1],new_ballspeed_x,new_ballspeed_y,False))
         
@@ -223,7 +226,7 @@ def round():
 def get_fps(clock,screen):
     fps = clock.get_fps()
     fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
-    screen.blit(fps_text, (720, 660))
+    screen.blit(fps_text, (760, 15))
 
 def projectile_update(screen,bar_rect,health_obj,bar):
     for projectile in config.projectiles:
@@ -265,21 +268,21 @@ def tile_pattern(pattern,tiles,tile_cls,image):
         y_pos = y_start_pos
         gap = 10
         for i in range(0,config.tile_row):
-                    for j in range(0,config.tile_column):
-                        type = tile_type()
-                        if type == "heal":        
-                            tiles.append(tile_cls(image[5],x_pos,y_pos,type))
-                        elif type == "new_ball":
-                            tiles.append(tile_cls(image[6],x_pos,y_pos,type))
-                        elif type == "explode":
-                            tiles.append(tile_cls(image[7],x_pos,y_pos,type))
-                        elif type == "longbar":
-                            tiles.append(tile_cls(image[8],x_pos,y_pos,type))
-                        else:
-                            tiles.append(tile_cls(image[i],x_pos,y_pos,type))
-                        x_pos += (image[0].get_width() + gap)
-                    x_pos = x_start_pos
-                    y_pos += image[0].get_height() + 10
+            for j in range(0,config.tile_column):
+                type = tile_type()
+                if type == "heal":        
+                    tiles.append(tile_cls(image[5],x_pos,y_pos,type))
+                elif type == "new_ball":
+                    tiles.append(tile_cls(image[6],x_pos,y_pos,type))
+                elif type == "explode":
+                    tiles.append(tile_cls(image[7],x_pos,y_pos,type))
+                elif type == "longbar":
+                    tiles.append(tile_cls(image[8],x_pos,y_pos,type))
+                else:
+                    tiles.append(tile_cls(image[i],x_pos,y_pos,type))
+                x_pos += (image[0].get_width() + gap)
+            x_pos = x_start_pos
+            y_pos += image[0].get_height() + 10
     
     
     

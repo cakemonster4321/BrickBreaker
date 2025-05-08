@@ -1,12 +1,12 @@
 import pygame
 import os
 
-screen_height = 700
+screen_height = 750
 screen_width = 900
 main_run  = True
 menu_run  = True
-ballspeed_x = 3
-ballspeed_y = -3
+ballspeed_x = 4
+ballspeed_y = -4
 projectile_speed_x = 0
 projectile_speed_y = 3
 balls = []
