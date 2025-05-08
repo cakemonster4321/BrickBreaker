@@ -20,7 +20,7 @@ points = 0
 has_initialized = False
 game_over = False
 ball_refilled = False
-round = 0
+round = 1
 if_now_called = False
 long_bar = False
 end_time = 0
@@ -56,5 +56,7 @@ total_points_text = menu_font.render(f"You got {points}",False,(255,255,255))
 total_points_rect = total_points_text.get_rect()
 total_points_rect.center = (screen_width/2,screen_height/2+150)
 
+round_text = font.render(f"Round : {round}",False,(255,255,255))
+round_text_rect = round_text.get_rect()
 
 

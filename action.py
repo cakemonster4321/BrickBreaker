@@ -102,20 +102,22 @@ def check_bounce_tileBreak(ball,tiles,to_remove):
             to_remove.append(tile)
             
             
-def tile_generation(tiles,tile,image):
+def tile_generation(tiles,tile,image,screen):
     x_start_pos = 45
     y_start_pos = 55
     x_pos = x_start_pos
     y_pos = y_start_pos
     gap = 10
-    
+    draw_round(screen)
     assert isinstance(tiles,list)
     assert isinstance(image,list)
     if len(tiles) == 0:
+        if round != 1:
+            config.balls.clear()
+        config.round_text = round()
         for i in range(0,config.tile_row):
             for j in range(0,config.tile_column):
                 type = tile_type()
-                print(type)
                 if type == "heal":        
                     tiles.append(tile(image[5],x_pos,y_pos,type))
                 elif type == "new_ball":
@@ -129,29 +131,33 @@ def tile_generation(tiles,tile,image):
                 x_pos += (image[0].get_width() + gap)
             x_pos = x_start_pos
             y_pos += image[0].get_height() + 10  
+
         config.round += 1
-        if config.round != 1:
-            config.balls.clear()
+        
     return tiles
 
 def tile_type():
-    num = random.randint(0,13)
+    num = random.randint(0,20)
     type = "normal"
-    if num > 3:
-        type = "longbar"
+    if num > 6:
+        type = "normal"
     elif num == 0:
         type = "heal"
-    elif num == 1:
+    elif num > 1 and num < 5:
         type = "new_ball"
-    elif num == 2:
+    elif num == 5:
         type = "explode"
-    elif num == 3:
+    elif num == 6:
         type = "longbar"
     return type
 
 
 def draw_score(screen):
-    screen.blit(config.score_text,(720,660))
+    screen.blit(config.score_text,(720,600))
+    
+def draw_round(screen):
+    screen.blit(config.round_text,(720,630))
+    
 
 def draw_total_score(screen):
     config.total_points_text = config.menu_font.render(f"You got {config.points}",False,(255,255,255))
@@ -209,6 +215,9 @@ def tile_add_new_ball(tile,ball_cls,ball_image,ball):
         new_momentum_y = random.randint(-2,2)
         new_ballspeed_x = ball.speed_x + new_momentum_x
         new_ballspeed_y = ball.speed_y + new_momentum_y
+        if new_ballspeed_x == 0 or new_ballspeed_y == 0:
+            new_ballspeed_x = random.randint(3,6)
+            new_ballspeed_y = random.randint(3,6)
         image_num = random.randint(1,3)
         config.balls.append(add_balls(ball_image[image_num],ball_cls,tile.rect.center[0],tile.rect.center[1],new_ballspeed_x,new_ballspeed_y,False))
         
@@ -226,10 +235,14 @@ def score():
     
     return config.score_text
 
+def round():
+    config.round_text = config.font.render(f"Round : {config.round}",False,(255,255,255))
+    return config.round_text
+
 def get_fps(clock,screen):
     fps = clock.get_fps()
     fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
-    screen.blit(fps_text, (720, 630))
+    screen.blit(fps_text, (720, 660))
 
 def projectile_update(screen,bar_rect,health_obj,bar):
     for projectile in config.projectiles:

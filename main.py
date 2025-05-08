@@ -221,7 +221,7 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         action.shoot_ball(userinput)
-        config.tiles = action.tile_generation(config.tiles,tile,TILE)
+        config.tiles = action.tile_generation(config.tiles,tile,TILE,screen)
         
         for ball in config.balls:
             ball.draw(screen)
@@ -245,7 +245,7 @@ def main():
             config.to_add.clear()
         
         action.long_bar(bar1,BAR[0],BAR[1])
-            
+
         
         action.refill_ball(BALL,Ball,bar1)
         
