@@ -140,7 +140,7 @@ class health:
         self.full_image = HEALTH[0] 
         self.half_image = HEALTH[1] 
         self.empty_image = HEALTH[2]
-        self.full_hp = 10
+        self.full_hp = 6
         self.current_hp = self.full_hp
         self.lost_hp = 0
         self.half_heart_count = 0                
