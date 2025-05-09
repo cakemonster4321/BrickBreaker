@@ -128,7 +128,7 @@ class background:
             self.y = self.y
             self.image = image
     def draw(self,screen):
-        screen.blit(self.image,(self.x,self.y))
+        screen.fill((53,40,90))
  
 class health:
     def __init__(self):

@@ -135,10 +135,10 @@ def tile_type():
 
 
 def draw_score(screen):
-    screen.blit(config.score_text,(720,config.screen_height - 40))
+    screen.blit(config.score_text,(700,config.screen_height - 40))
     
 def draw_round(screen):
-    screen.blit(config.round_text,(720, config.screen_height - 80))
+    screen.blit(config.round_text,(700, config.screen_height - 80))
     
 
 def draw_total_score(screen):
