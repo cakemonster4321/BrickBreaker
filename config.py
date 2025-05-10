@@ -24,6 +24,7 @@ ball_refilled = False
 round = 1
 if_now_called = False
 long_bar = False
+longbar_multiple_hit = 1
 end_time = 0
 alpha = 255
 

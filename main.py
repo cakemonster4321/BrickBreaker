@@ -30,7 +30,10 @@ TILE = [
     pygame.image.load(os.path.join("assets/Tiles/heal_tile.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/new_ball_tile.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/explode_tile.png")).convert_alpha(),
-    pygame.image.load(os.path.join("assets/Tiles/longbar_tile.png")).convert_alpha()
+    pygame.image.load(os.path.join("assets/Tiles/longbar_tile.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/tile_hit.png")).convert_alpha(),
+    pygame.image.load(os.path.join("assets/Tiles/tile_hit1.png")).convert_alpha()
+
 
 ]
 HEALTH = [
@@ -102,9 +105,9 @@ class tile(GameObject):
     
     def update(self):
         if self.fading == True and self in config.removed:
-            self.alpha = max(0, self.alpha - 5)
+            self.image = TILE[10]
+            self.alpha = max(0, self.alpha - 15)
             self.image.set_alpha(self.alpha)
-            print(self.alpha)
         if self.alpha <= 0 and self in config.removed:
             config.removed.remove(self)
             
@@ -208,6 +211,7 @@ class Projectile(GameObject):
         
             if self.type == "longbar":
                 config.long_bar = True
+                config.longbar_multiple_hit *= 2
                 config.projectiles.remove(self)
         
         self.rect.x += self.speed_x

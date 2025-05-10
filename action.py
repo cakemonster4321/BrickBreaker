@@ -122,7 +122,7 @@ def tile_type():
     num = random.randint(0,20)
     type = "normal"
     if num > 6:
-        type = "normal"
+        type = "longbar"
     elif num == 0:
         type = "heal"
     elif num > 1 and num < 5:
@@ -245,10 +245,9 @@ def long_bar(bar,bar_image,longbar_image):
     old_bar_centerx = bar.rect.center[0]
     old_bar_centery = bar.rect.center[1]
     if config.long_bar and not config.if_now_called:
-        now = time.time()
         config.long_bar = True
         config.if_now_called = True
-        config.end_time = now + 10
+        config.end_time = time.time() + 10
         
     if time.time() < config.end_time:
         old_bar_centerx = bar.rect.center[0]
@@ -258,9 +257,15 @@ def long_bar(bar,bar_image,longbar_image):
         bar.rect.center =(old_bar_centerx,old_bar_centery)
         bar.offset_y = longbar_image.get_height()
         bar.offset_x = longbar_image.get_width()
+        if config.longbar_multiple_hit > 2:
+            print(config.longbar_multiple_hit)
+            config.end_time += (10-(config.end_time - time.time()))
+            #回到只打中一次的hit
+            config.longbar_multiple_hit = 1
     else:
         config.long_bar = False
         config.if_now_called = False
+        config.longbar_multiple_hit = 1
         bar.image = bar_image
         bar.rect = bar_image.get_rect()
         bar.rect.center =(old_bar_centerx,old_bar_centery)
