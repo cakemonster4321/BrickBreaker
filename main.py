@@ -92,12 +92,28 @@ class Ball(GameObject):
 class tile(GameObject):
     def __init__(self,image,x_pos,y_pos,type):
         super().__init__(image)
+        self.image = image.copy()
         self.rect.x = x_pos
         self.rect.y = y_pos
         self.type = type
+        self.alpha = 255
+        self.fading = False
+        self.deleted = False
     
-    def draw(self,screen):
+    def update(self):
+        if self.fading == True and self in config.removed:
+            self.alpha = max(0, self.alpha - 5)
+            self.image.set_alpha(self.alpha)
+            print(self.alpha)
+        if self.alpha <= 0 and self in config.removed:
+            config.removed.remove(self)
+            
+            
+    
+    def draw(self,screen): 
         screen.blit(self.image,(self.rect.x,self.rect.y))
+            
+
         
 
 class bar(GameObject):

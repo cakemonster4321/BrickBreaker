@@ -86,15 +86,15 @@ def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar
             tile_heal(tile,projectile_cls,heal_image)
             tile_longbar(tile,projectile_cls,longbar_image)
             tile_explode(tile)
+            config.removed.append(tile)
+            tile.fading = True
             tiles.remove(tile)
             config.score_text = score()
-    # if tile_break:
-        # new_ball = add_balls(ball_image, ball_cls, x, y, ball.speed_x+1, ball.speed_y)
-        # config.to_add.append(new_ball)
+            # tile.deleted = True
+            
 
 def check_bounce_tileBreak(ball,tiles,to_remove):
     ball_range = ball.rect.inflate(50,50)
-    hit = False
     for tile in reversed((tiles)):
         if not ball_range.colliderect(tile.rect):
             continue
@@ -183,6 +183,10 @@ def take_damage(health,ball):
 
 def draw_tiles(screen):
     for tile in config.tiles:
+        tile.update()
+        tile.draw(screen)
+    for tile in config.removed:
+        tile.update()
         tile.draw(screen)
 
 def game_stat_end():
@@ -263,7 +267,7 @@ def long_bar(bar,bar_image,longbar_image):
          
 def tile_pattern(pattern,tiles,tile_cls,image):
     if pattern == 0:
-        x_start_pos = 45
+        x_start_pos = 65
         y_start_pos = 55
         x_pos = x_start_pos
         y_pos = y_start_pos
@@ -285,12 +289,15 @@ def tile_pattern(pattern,tiles,tile_cls,image):
             x_pos = x_start_pos
             y_pos += image[0].get_height() + 10
             
-def tile_explode(tile,):
+def tile_explode(tile):
     if tile.type == "explode":
         explosion_rect = tile.rect.inflate(tile.image.get_width(),tile.image.get_height())
         for other_tile in config.tiles:
             if explosion_rect.colliderect(other_tile) and other_tile != tile:
                 config.to_remove.append(other_tile)
+                
+    
+
     
     
     

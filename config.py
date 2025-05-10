@@ -2,7 +2,7 @@ import pygame
 import os
 
 screen_height = 700
-screen_width = 900
+screen_width = 930
 main_run  = True
 menu_run  = True
 ballspeed_x = 3
@@ -12,6 +12,7 @@ projectile_speed_y = 3
 balls = []
 projectiles = []
 to_remove = []
+removed = []
 to_add = []
 tiles = []
 tile_row = 5
@@ -24,6 +25,7 @@ round = 1
 if_now_called = False
 long_bar = False
 end_time = 0
+alpha = 255
 
 pygame.font.init()
 font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 35)
