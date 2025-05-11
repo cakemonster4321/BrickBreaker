@@ -77,7 +77,7 @@ def collision(ball,object):
             
     return ball.speed_x,ball.speed_y
 
-def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar_image):
+def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar_image,audio):
     config.to_remove = []
     check_bounce_tileBreak(ball,tiles,config.to_remove)
     for tile in config.to_remove:
@@ -88,6 +88,7 @@ def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar
             tile_explode(tile)
             config.removed.append(tile)
             tile.fading = True
+            tile.audio.play()
             tiles.remove(tile)
             config.score_text = score()
             # tile.deleted = True
@@ -103,7 +104,7 @@ def check_bounce_tileBreak(ball,tiles,to_remove):
             to_remove.append(tile)
             
             
-def tile_generation(tiles,tile,image,screen):
+def tile_generation(tiles,tile,image,screen,audio):
     pattern = random.randint(0,0)
     draw_round(screen)
     assert isinstance(tiles,list)
@@ -112,7 +113,7 @@ def tile_generation(tiles,tile,image,screen):
         if round != 1:
             config.balls.clear()
         config.round_text = round()
-        tile_pattern(pattern,tiles,tile,image) 
+        tile_pattern(pattern,tiles,tile,image,audio) 
 
         config.round += 1
         
@@ -122,10 +123,10 @@ def tile_type():
     num = random.randint(0,20)
     type = "normal"
     if num > 6:
-        type = "longbar"
+        type = "ball"
     elif num == 0:
         type = "heal"
-    elif num > 1 and num < 5:
+    elif num > 0 and num < 5:
         type = "new_ball"
     elif num == 5:
         type = "explode"
@@ -270,7 +271,7 @@ def long_bar(bar,bar_image,longbar_image):
         bar.rect = bar_image.get_rect()
         bar.rect.center =(old_bar_centerx,old_bar_centery)
          
-def tile_pattern(pattern,tiles,tile_cls,image):
+def tile_pattern(pattern,tiles,tile_cls,image,audio):
     if pattern == 0:
         x_start_pos = 65
         y_start_pos = 55
@@ -281,15 +282,15 @@ def tile_pattern(pattern,tiles,tile_cls,image):
             for j in range(0,config.tile_column):
                 type = tile_type()
                 if type == "heal":        
-                    tiles.append(tile_cls(image[5],x_pos,y_pos,type))
+                    tiles.append(tile_cls(image[5],x_pos,y_pos,type,audio[0]))
                 elif type == "new_ball":
-                    tiles.append(tile_cls(image[6],x_pos,y_pos,type))
+                    tiles.append(tile_cls(image[6],x_pos,y_pos,type,audio[0]))
                 elif type == "explode":
-                    tiles.append(tile_cls(image[7],x_pos,y_pos,type))
+                    tiles.append(tile_cls(image[7],x_pos,y_pos,type,audio[0]))
                 elif type == "longbar":
-                    tiles.append(tile_cls(image[8],x_pos,y_pos,type))
+                    tiles.append(tile_cls(image[8],x_pos,y_pos,type,audio[0]))
                 else:
-                    tiles.append(tile_cls(image[i],x_pos,y_pos,type))
+                    tiles.append(tile_cls(image[i],x_pos,y_pos,type,audio[0]))
                 x_pos += (image[0].get_width() + gap)
             x_pos = x_start_pos
             y_pos += image[0].get_height() + 10

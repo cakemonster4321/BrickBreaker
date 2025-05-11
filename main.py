@@ -7,6 +7,7 @@ import action
 
 
 pygame.init()
+pygame.mixer.init()
 screen = pygame.display.set_mode((config.screen_width,config.screen_height))
 pygame.display.set_caption("Brick Breaker")
 
@@ -33,9 +34,13 @@ TILE = [
     pygame.image.load(os.path.join("assets/Tiles/longbar_tile.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/tile_hit.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Tiles/tile_hit1.png")).convert_alpha()
-
-
 ]
+
+TILE_SOUND = [
+    pygame.mixer.Sound(os.path.join("assets/Audio/Normal_tile.wav"))
+]
+
+
 HEALTH = [
     pygame.image.load(os.path.join("assets/Health/full_heart.png")).convert_alpha(),
     pygame.image.load(os.path.join("assets/Health/half_heart.png")).convert_alpha(),
@@ -93,7 +98,7 @@ class Ball(GameObject):
         
 
 class tile(GameObject):
-    def __init__(self,image,x_pos,y_pos,type):
+    def __init__(self,image,x_pos,y_pos,type,audio):
         super().__init__(image)
         self.image = image.copy()
         self.rect.x = x_pos
@@ -102,6 +107,7 @@ class tile(GameObject):
         self.alpha = 255
         self.fading = False
         self.deleted = False
+        self.audio = audio
     
     def update(self):
         if self.fading == True and self in config.removed:
@@ -138,6 +144,8 @@ class bar(GameObject):
             self.rect.x = config.screen_width - self.offset_x
     def draw(self,screen):
             screen.blit(self.image,(self.rect.x,self.rect.y))
+            
+            
 
 class background:
     x = 0
@@ -241,7 +249,7 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         action.shoot_ball(userinput)
-        config.tiles = action.tile_generation(config.tiles,tile,TILE,screen)
+        config.tiles = action.tile_generation(config.tiles,tile,TILE,screen,TILE_SOUND)
         
         for ball in config.balls:
             ball.draw(screen)
@@ -253,7 +261,7 @@ def main():
                 ball.speed_x,ball.speed_y = action.collision(ball,bar1)
             
             action.delete_balls(ball,health1)
-            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0],PROJECTILE[1])
+            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0],PROJECTILE[1],TILE_SOUND)
         action.projectile_update(screen,bar1.rect,health1,bar1)
         health1.update(screen)
         action.draw_tiles(screen)   
