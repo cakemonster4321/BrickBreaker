@@ -15,17 +15,17 @@ Best regards.
 
 - pygame
 
-### 📃Assets
+-Use the following commands in your terminal to download it:
+
+-pip install pygame
+
+
+## 📃Assets
 
 -Pictures are from https://opengameart.org/content/breakout-set
 
 -Audios are from https://pixabay.com/sound-effects/search/game%20over/
 
-
-
-Use the following commands in your terminal to download it:
-
-pip install pygame
 
 ## 🗿features
 
