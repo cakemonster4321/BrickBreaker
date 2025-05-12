@@ -82,13 +82,13 @@ def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar
     check_bounce_tileBreak(ball,tiles,config.to_remove)
     for tile in config.to_remove:
         if tile in tiles:
+            tile.audio.play()
             tile_add_new_ball(tile,ball_cls,ball_image,ball)
             tile_heal(tile,projectile_cls,heal_image)
             tile_longbar(tile,projectile_cls,longbar_image)
             tile_explode(tile)
             config.removed.append(tile)
             tile.fading = True
-            tile.audio.play()
             tiles.remove(tile)
             config.score_text = score()
             # tile.deleted = True
@@ -114,7 +114,7 @@ def tile_generation(tiles,tile,image,screen,audio):
             config.balls.clear()
         config.round_text = round()
         tile_pattern(pattern,tiles,tile,image,audio) 
-
+        audio[3].play()
         config.round += 1
         
     return tiles
@@ -172,14 +172,15 @@ def shoot_ball(userinput):
                 ball.speed_x = config.ballspeed_x
                 ball.speed_y = config.ballspeed_y
 
-def delete_balls(ball,health):
+def delete_balls(ball,health,audio):
     if ball.rect.y >= config.screen_height:
         if ball in config.balls:
             config.balls.remove(ball)
-            take_damage(health,ball)
+            take_damage(health,ball,audio)
 
-def take_damage(health,ball):
+def take_damage(health,ball,audio):
     if ball.original_ball:
+        audio.play()
         health.current_hp -= 1
 
 def draw_tiles(screen):
@@ -190,7 +191,8 @@ def draw_tiles(screen):
         tile.update()
         tile.draw(screen)
 
-def game_stat_end():
+def game_stat_end(audio):
+    audio[4].play()
     config.main_run = False
     config.tiles.clear()
     config.balls.clear()
@@ -234,9 +236,9 @@ def get_fps(clock,screen):
     fps_text = config.font.render(f"FPS: {fps:.2f}", False, (255, 255, 255))
     screen.blit(fps_text, (760, 15))
 
-def projectile_update(screen,bar_rect,health_obj,bar):
+def projectile_update(screen,bar_rect,health_obj):
     for projectile in config.projectiles:
-        projectile.update(bar_rect,health_obj,bar)
+        projectile.update(bar_rect,health_obj)
         projectile.draw(screen)
         
         

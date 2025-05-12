@@ -7,7 +7,7 @@ import action
 
 
 pygame.init()
-pygame.mixer.init()
+pygame.mixer.init(frequency=44100, size=-16, channels=2)
 screen = pygame.display.set_mode((config.screen_width,config.screen_height))
 pygame.display.set_caption("Brick Breaker")
 
@@ -36,9 +36,6 @@ TILE = [
     pygame.image.load(os.path.join("assets/Tiles/tile_hit1.png")).convert_alpha()
 ]
 
-TILE_SOUND = [
-    pygame.mixer.Sound(os.path.join("assets/Audio/Normal_tile.wav"))
-]
 
 
 HEALTH = [
@@ -49,6 +46,14 @@ HEALTH = [
 PROJECTILE = [
     pygame.image.load(os.path.join("assets/Other/health_projectile.png")).convert_alpha(), 
     pygame.image.load(os.path.join("assets/Other/bar_projectile.png")).convert_alpha()
+]
+AUDIO = [
+    pygame.mixer.Sound(os.path.join("assets/Audio/Normal_tile.wav")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/border.wav")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/heal.wav")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/round.wav")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/lost.wav")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/hurt.wav"))
 ]
 
 class GameObject:
@@ -78,10 +83,13 @@ class Ball(GameObject):
         self.original_ball = if_original
     def update(self):
         if self.rect.x <= 0:
+            AUDIO[1].play()
             self.speed_x = abs(self.speed_x)
         if self.rect.x >= config.screen_width - self.offset_x:
+            AUDIO[1].play()
             self.speed_x = -abs(self.speed_x)
         if self.rect.y <= 0:
+            AUDIO[1].play()
             self.speed_y = abs(self.speed_y)
 
         
@@ -108,6 +116,7 @@ class tile(GameObject):
         self.fading = False
         self.deleted = False
         self.audio = audio
+        self.audio.set_volume(0.2)
     
     def update(self):
         if self.fading == True and self in config.removed:
@@ -197,7 +206,7 @@ class health:
             
         if self.current_hp <= 0 and config.main_run:
             print(self.current_hp)
-            action.game_stat_end()
+            action.game_stat_end(AUDIO)
             
 class Projectile(GameObject):
     def __init__(self,image,pos_x,pos_y,speed_x,speed_y,type):
@@ -208,9 +217,10 @@ class Projectile(GameObject):
         self.speed_x = speed_x
         self.speed_y = speed_y
         self.type = type
-    def update(self,bar_rect,health_obj,bar):
+    def update(self,bar_rect,health_obj):
         if self.rect.colliderect(bar_rect):
             if self.type == "heal":
+                AUDIO[2].play()
                 if health_obj.current_hp >= health_obj.full_hp:
                     health_obj.current_hp = health_obj.current_hp
                 else: 
@@ -218,6 +228,7 @@ class Projectile(GameObject):
                 config.projectiles.remove(self)
         
             if self.type == "longbar":
+                AUDIO[3].play()
                 config.long_bar = True
                 config.longbar_multiple_hit *= 2
                 config.projectiles.remove(self)
@@ -249,20 +260,20 @@ def main():
         background1.draw(screen)
         userinput = pygame.key.get_pressed()
         action.shoot_ball(userinput)
-        config.tiles = action.tile_generation(config.tiles,tile,TILE,screen,TILE_SOUND)
+        config.tiles = action.tile_generation(config.tiles,tile,TILE,screen,AUDIO)
         
         for ball in config.balls:
             ball.draw(screen)
             ball.update()
                 
             if action.circle_rect_collide(ball.rect.center,ball.offset_x/2,bar1.rect):
-                print("yes")
+                AUDIO[1].play()
                 print(ball.rect)
                 ball.speed_x,ball.speed_y = action.collision(ball,bar1)
             
-            action.delete_balls(ball,health1)
-            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0],PROJECTILE[1],TILE_SOUND)
-        action.projectile_update(screen,bar1.rect,health1,bar1)
+            action.delete_balls(ball,health1,AUDIO[5])
+            action.tile_action(ball,config.tiles,Projectile,Ball,BALL,PROJECTILE[0],PROJECTILE[1],AUDIO)
+        action.projectile_update(screen,bar1.rect,health1)
         health1.update(screen)
         action.draw_tiles(screen)   
         bar1.draw(screen)
