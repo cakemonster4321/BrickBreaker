@@ -3,6 +3,7 @@ import random
 import pygame
 import time
 
+#取與左右上下接觸的座標
 def circle_rect_collide(circle_center, circle_radius, rect):
     closest_x = max(rect.left, min(circle_center[0], rect.right))
     closest_y = max(rect.top, min(circle_center[1], rect.bottom))
