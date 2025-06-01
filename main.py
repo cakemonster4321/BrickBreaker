@@ -220,11 +220,11 @@ class Projectile(GameObject):
     def update(self,bar_rect,health_obj):
         if self.rect.colliderect(bar_rect):
             if self.type == "heal":
-                AUDIO[2].play()
                 if health_obj.current_hp >= health_obj.full_hp:
                     health_obj.current_hp = health_obj.current_hp
                 else: 
                     health_obj.current_hp += 1
+                    AUDIO[2].play()
                 config.projectiles.remove(self)
         
             if self.type == "longbar":
