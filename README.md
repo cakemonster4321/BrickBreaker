@@ -77,6 +77,20 @@ Best regards.
 
 #### 🎲Tile Patterns
 
+-There's only one pattern now.
+
+##### Planned goals.
+
+-Holes in between.
+
+-Big bar.
+
+-凹
+
+- Cap.
+
+- 
+
 -Under construction...
 
 ### 🕰️Round 
