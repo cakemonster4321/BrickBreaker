@@ -242,12 +242,13 @@ class Projectile(GameObject):
             
     
 def main():
+    config.points = 0
+    config.round = 1
     clock = pygame.time.Clock()
     bar1 = bar(BAR[0])
     config.balls.append(action.add_balls(BALL[0],Ball,bar1.rect.center[0]-BALL[0].get_width()/2,config.screen_height/2 - BALL[0].get_height()/2, 0, 0,True))
     background1 = background(BACKGROUND)
     health1 = health()
-    config.points = 0
     config.has_initialized = True
     
     while config.main_run:
@@ -294,7 +295,7 @@ def main():
 
         pygame.display.update()
         
-        clock.tick(120)   
+        clock.tick(config.tick)   
     
 
 

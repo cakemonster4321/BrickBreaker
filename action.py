@@ -4,6 +4,8 @@ import pygame
 import time
 
 #取與左右上下接觸的座標
+#如果圓心在矩形外面，這個點就是矩形的邊緣上最靠近圓心的位置。
+#如果圓心在矩形內部，這個點就是圓心本身。
 def circle_rect_collide(circle_center, circle_radius, rect):
     closest_x = max(rect.left, min(circle_center[0], rect.right))
     closest_y = max(rect.top, min(circle_center[1], rect.bottom))
@@ -18,8 +20,13 @@ def circle_rect_collide(circle_center, circle_radius, rect):
 def collision(ball,object):
     direction = ""
    
+    #dx 正表示 ball 在 object 右邊，負表示在左邊。
+    #dy 正表示 ball 在 object 下方，負表示在上方。
     dx = (ball.rect.centerx - object.rect.centerx)
     dy = (ball.rect.centery - object.rect.centery)
+    #如果兩個矩形中心點距離 dx 小於 widths，代表水平方向有重疊。
+    #widths 就像是從兩物件中心延伸的邊界距離。
+
     widths = (ball.rect.width + object.rect.width) / 2
     heights = (ball.rect.height + object.rect.height) / 2
 
@@ -97,7 +104,7 @@ def tile_action(ball,tiles,projectile_cls,ball_cls,ball_image,heal_image,longbar
 
 def check_bounce_tileBreak(ball,tiles,to_remove):
     ball_range = ball.rect.inflate(50,50)
-    for tile in reversed((tiles)):
+    for tile in tiles:
         if not ball_range.colliderect(tile.rect):
             continue
         if not circle_rect_collide(ball.previous_rect.center,ball.offset_x/2,tile.rect) and circle_rect_collide(ball.rect.center,ball.offset_x/2,tile.rect):
@@ -111,12 +118,15 @@ def tile_generation(tiles,tile,image,screen,audio):
     assert isinstance(tiles,list)
     assert isinstance(image,list)
     if len(tiles) == 0:
-        if round != 1:
+        if config.round != 1:
             config.balls.clear()
+            config.tick += 30
+            print(config.tick)
         config.round_text = round()
         tile_pattern(pattern,tiles,tile,image,audio) 
         audio[3].play()
         config.round += 1
+        print(config.tick)
         
     return tiles
 
@@ -124,7 +134,7 @@ def tile_type():
     num = random.randint(0,20)
     type = "normal"
     if num > 6:
-        type = "ball"
+        type = "normal"
     elif num == 0:
         type = "heal"
     elif num > 0 and num < 5:
@@ -198,6 +208,8 @@ def game_stat_end(audio):
     config.tiles.clear()
     config.balls.clear()
     config.projectiles.clear()
+    config.score = 1
+    config.round = 1
     config.ball_refilled = False
     config.has_initialized = False
     
@@ -304,6 +316,8 @@ def tile_explode(tile):
         for other_tile in config.tiles:
             if explosion_rect.colliderect(other_tile) and other_tile != tile:
                 config.to_remove.append(other_tile)
+                
+
                 
     
 
