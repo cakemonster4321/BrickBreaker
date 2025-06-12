@@ -11,7 +11,7 @@ I hope you find my game interesting and maybe you can leave a star. If there's s
 
 
 你好! 我是高雄大學資管系大二學生。 這個brickBreaker是為了學習python語法所以練習用的小遊戲
-從0開始寫，開始到結束出現了很多想法，所以程式非常雜亂，請見諒，如果覺得這個小遊戲有趣的話麻煩幫我留個start 甘溫!!
+從0開始寫，開始到結束出現了很多想法，所以程式非常雜亂，請見諒，如果覺得這個小遊戲有趣的話麻煩幫我留個star 甘溫!!
 
 Best regards.
 
