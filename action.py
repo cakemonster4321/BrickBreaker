@@ -121,7 +121,6 @@ def tile_generation(tiles,tile,image,screen,audio):
     if len(tiles) == 0:
         if config.round != 1:
             config.balls.clear()
-            config.projectiles.clear()
             config.tick += 50
         config.round_text = round()
         tile_pattern(pattern,tiles,tile,image,audio) 

@@ -27,7 +27,7 @@ long_bar = False
 longbar_multiple_hit = 1
 end_time = 0
 alpha = 255
-tick = 200
+tick = 150
 
 pygame.font.init()
 font = pygame.font.Font(os.path.join("assets/font", "PixelPurl.TTF"), 35)
