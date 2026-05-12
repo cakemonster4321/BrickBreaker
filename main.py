@@ -48,12 +48,12 @@ PROJECTILE = [
     pygame.image.load(os.path.join("assets/Other/bar_projectile.png")).convert_alpha()
 ]
 AUDIO = [
-    pygame.mixer.Sound(os.path.join("assets/Audio/Normal_tile.wav")),
-    pygame.mixer.Sound(os.path.join("assets/Audio/border.wav")),
-    pygame.mixer.Sound(os.path.join("assets/Audio/heal.wav")),
-    pygame.mixer.Sound(os.path.join("assets/Audio/round.wav")),
-    pygame.mixer.Sound(os.path.join("assets/Audio/lost.wav")),
-    pygame.mixer.Sound(os.path.join("assets/Audio/hurt.wav"))
+    pygame.mixer.Sound(os.path.join("assets/Audio/Normal_tile.ogg")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/border.ogg")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/heal.ogg")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/round.ogg")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/lost.ogg")),
+    pygame.mixer.Sound(os.path.join("assets/Audio/hurt.ogg"))
 ]
 
 class GameObject:
