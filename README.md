@@ -1,5 +1,7 @@
 # 🏀BrickBreaker
 
+## Run main.py!
+
 ## 📄Intro
 
 Hello! I'm a sophomore from NUKIM. This is a small BrickBreaker game I built using python.   
